@@ -36,29 +36,29 @@ namespace Operations
 
 
         }
-        public static void ChangeValue(DataTable formDataTable)
+        public static void ExecuteCommand(string cmd)
         {
-            var savedTable = ReadDatabase();
-            var x = savedTable.Rows;
-
             SqlConnection _connection = new SqlConnection(_ConnectionString);
             _connection.Open();
-
-            DataSet ds = new DataSet();
-            ds.Tables.Add(savedTable);
-
-            //SqlCommand command = new SqlCommand($"INSERT INTO {_tableName} {formDataTable} " +
-            //                                    "Values ('string', 1)", _connection);
-            //string sql = "INSERT INTO T (A, B, C) VALUES (@A, @B, @C)";
-            //SqlCommand command = _connection.CreateCommand();
-            //command.CommandText = sql;
-            //command.Parameters()
-
-            //command.ExecuteNonQuery();
-
+            SqlCommand command = new SqlCommand(cmd, _connection);
+            command.ExecuteNonQuery();
             _connection.Close();
         }
 
+        public void SaveChanges(DataTable formDataTable)
+        {
+            var x = formDataTable.Rows;
+            foreach (var item in x)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Creates a new row to a database and assigns specified names to it.
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
         public static void AddRow(string firstName, string lastName)
         {
             SqlConnection _connection = new SqlConnection(_ConnectionString);

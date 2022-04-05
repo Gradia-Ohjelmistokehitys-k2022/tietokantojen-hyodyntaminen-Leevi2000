@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.dataGrid = new System.Windows.Forms.DataGridView();
-            this.btnUpdateDatabase = new System.Windows.Forms.Button();
             this.btnSaveChanges = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -45,21 +44,14 @@
             this.dataGrid.RowTemplate.Height = 25;
             this.dataGrid.Size = new System.Drawing.Size(776, 303);
             this.dataGrid.TabIndex = 0;
+            this.dataGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGrid_CellBeginEdit);
             this.dataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // btnUpdateDatabase
-            // 
-            this.btnUpdateDatabase.Location = new System.Drawing.Point(12, 330);
-            this.btnUpdateDatabase.Name = "btnUpdateDatabase";
-            this.btnUpdateDatabase.Size = new System.Drawing.Size(215, 64);
-            this.btnUpdateDatabase.TabIndex = 1;
-            this.btnUpdateDatabase.Text = "Päivitä Tietokanta";
-            this.btnUpdateDatabase.UseVisualStyleBackColor = true;
-            this.btnUpdateDatabase.Click += new System.EventHandler(this.btnUpdateDatabase_Click);
+            this.dataGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellEndEdit);
+            this.dataGrid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGrid_CellEnter);
             // 
             // btnSaveChanges
             // 
-            this.btnSaveChanges.Location = new System.Drawing.Point(233, 330);
+            this.btnSaveChanges.Location = new System.Drawing.Point(216, 330);
             this.btnSaveChanges.Name = "btnSaveChanges";
             this.btnSaveChanges.Size = new System.Drawing.Size(183, 64);
             this.btnSaveChanges.TabIndex = 2;
@@ -85,11 +77,11 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(422, 331);
+            this.btnAdd.Location = new System.Drawing.Point(12, 331);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(188, 63);
             this.btnAdd.TabIndex = 5;
-            this.btnAdd.Text = "Lisää";
+            this.btnAdd.Text = "Lisää uusi henkilö";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -102,7 +94,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnSaveChanges);
-            this.Controls.Add(this.btnUpdateDatabase);
             this.Controls.Add(this.dataGrid);
             this.Name = "TietokannanSelausForm";
             this.Text = "Form1";
@@ -115,7 +106,6 @@
         #endregion
 
         private DataGridView dataGrid;
-        private Button btnUpdateDatabase;
         private Button btnSaveChanges;
         private TextBox textBox1;
         private Button button1;
