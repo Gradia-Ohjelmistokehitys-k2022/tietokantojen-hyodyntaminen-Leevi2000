@@ -25,7 +25,6 @@ namespace Operations
                 dataAdapter.Fill(dataTable);
                 _connection.Close();
                 return dataTable;
-
             }
             catch (Exception ex)
             {
@@ -33,9 +32,12 @@ namespace Operations
                 _connection.Close();
                 return null;
             }
-
-
         }
+
+        /// <summary>
+        /// Sends given command to the database.
+        /// </summary>
+        /// <param name="cmd"></param>
         public static void ExecuteCommand(string cmd)
         {
             SqlConnection _connection = new SqlConnection(_ConnectionString);
@@ -55,7 +57,7 @@ namespace Operations
         }
 
         /// <summary>
-        /// Creates a new row to a database and assigns specified names to it.
+        /// Creates a new row to a database and assigns specified names/cell values to it.
         /// </summary>
         /// <param name="firstName"></param>
         /// <param name="lastName"></param>
@@ -69,8 +71,17 @@ namespace Operations
             _connection.Close();
         }
 
+        /// <summary>
+        /// Creates an message that can be shown to user. Message contains ID and the new name(s).
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static string CreateMSGFromRow(DataGridViewRow row)
+        {
+            string msg = $"Muutettu käyttäjää ID:{row.Cells[0].Value.ToString()}, {row.Cells[1].Value.ToString()}" + $" {row.Cells[2].Value.ToString()}";
+            return msg;
+        }
 
-
-
+       
     }
 }
