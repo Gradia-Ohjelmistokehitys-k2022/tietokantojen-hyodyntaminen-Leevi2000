@@ -9,6 +9,7 @@ namespace Operations
         static string _tableName = "Opiskelija";
         static string _Column1 = "Etunimi";
         static string _Column2 = "Sukunimi";
+
         /// <summary>
         /// Returns a DataTable from a connected Database.
         /// </summary>
@@ -76,9 +77,12 @@ namespace Operations
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
-        public static string CreateMSGFromRow(DataGridViewRow row)
+        public static string CreateMSGFromRow(DataGridViewRow row, bool userBeingDeleted = false)
         {
-            string msg = $"Muutettu käyttäjää ID:{row.Cells[0].Value.ToString()}, {row.Cells[1].Value.ToString()}" + $" {row.Cells[2].Value.ToString()}";
+            string msg;
+            if(userBeingDeleted) { msg = $"Poistettu käyttäjä ID:{row.Cells[0].Value.ToString()}, {row.Cells[1].Value.ToString()}" + $" {row.Cells[2].Value.ToString()}"; }
+            else { msg = $"Muutettu käyttäjää ID:{row.Cells[0].Value.ToString()}, {row.Cells[1].Value.ToString()}" + $" {row.Cells[2].Value.ToString()}"; }
+            
             return msg;
         }
 

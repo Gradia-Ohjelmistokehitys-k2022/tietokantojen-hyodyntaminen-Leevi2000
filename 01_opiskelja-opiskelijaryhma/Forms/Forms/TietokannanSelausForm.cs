@@ -105,6 +105,7 @@ namespace Forms
                 var idOfDeletedRow = e.Row.Cells[0].Value;
                 string command = $"DELETE FROM Opiskelija WHERE Id = {idOfDeletedRow}";
                 commandsToRun.Add(command);
+                TBLogAdd(CreateMSGFromRow(e.Row, true));
             }
             catch
             {
@@ -137,10 +138,18 @@ namespace Forms
             tbLog.Height = 45;
         }
 
+        /// <summary>
+        /// Adds given string to tbLog texbox.
+        /// </summary>
+        /// <param name="message"></param>
         private void TBLogAdd(string message)
         {
             tbLog.Text = tbLog.Text + "\n" + message + "\n";   
         }
+
+        /// <summary>
+        /// Clears tbLog texbox. Used usually after saving changes.
+        /// </summary>
         private void TBLogClear()
         {
             tbLog.Text = "Tallentamattomat Muutokset";
