@@ -1,11 +1,13 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
+using System.IO;
+using System;
 
 namespace Operations
 {
     public class Commands
     {
-        static string  _ConnectionString = @"Server = (localdb)\MSSQLLocalDB; Database = Opiskelijaryhma; Trusted_Connection = True;";
+        static string  _ConnectionString = @"Server = (localdb)\MSSQLLocalDB; ;Database=Opiskelijaryhma;Trusted_Connection = True";
         static string _StudentTableName = "Opiskelija";
         static string _GroupTableName = "OpiskelijaRyhmaTaulu";
         static string _Column1 = "Etunimi";

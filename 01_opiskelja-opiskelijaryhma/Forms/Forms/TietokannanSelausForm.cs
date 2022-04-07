@@ -97,6 +97,11 @@ namespace Forms
             }
         }
 
+        /// <summary>
+        /// Event when user deletes a row from datagridview.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGrid_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             try
@@ -153,8 +158,10 @@ namespace Forms
 
                 var etuN = rowChanges[i].Cells[1].Value.ToString();
                 var sukuN = rowChanges[i].Cells[2].Value.ToString();
+
+
                 var ryhmaNimi = rowChanges[i].Cells[5].Value.ToString();
-                int ryhmaId = 1;
+                int ryhmaId = 0;
 
                 // If groupname value is changed, get the id of the name.
                 var x = ReadGivenCommand($"SELECT Id FROM OpiskelijaryhmaTaulu WHERE Ryhmanimi = '{ryhmaNimi}'");
@@ -162,10 +169,27 @@ namespace Forms
                 {
                     foreach (DataColumn column in x.Columns)
                     {
-                        ryhmaId = int.Parse(row[column].ToString());
+                        try
+                        {
+                            ryhmaId = int.Parse(row[column].ToString());
+                        }
+                        catch { }
                     }
                 }
-                string command = ($"UPDATE Opiskelija SET Etunimi = '{etuN}', Sukunimi = '{sukuN}', RyhmaId = '{ryhmaId}' WHERE Id = {id}");
+
+                string command;
+
+                // If user has no group, leave it at null
+                if (ryhmaId == 0)
+                {
+                    command = ($"UPDATE Opiskelija SET Etunimi = '{etuN}', Sukunimi = '{sukuN}' WHERE Id = {id}");
+                }
+                else
+                {
+                    command = ($"UPDATE Opiskelija SET Etunimi = '{etuN}', Sukunimi = '{sukuN}', RyhmaId = '{ryhmaId}' WHERE Id = {id}");
+                }
+
+                 
                 commandsToRun.Add(command);
                 i++;
             }
@@ -173,9 +197,6 @@ namespace Forms
             // Clear changes lists
             idsOfChangedRows.Clear();
             rowChanges.Clear();
-            
-            
-
         }
 
         private void RunCommandList()
@@ -198,6 +219,32 @@ namespace Forms
             dataGrid.DataSource = ReadGroupDataBase();
             dataGrid.Columns["RyhmaId"].Visible = false;
             dataGrid.Columns["Id1"].Visible = false;
+        }
+
+
+        // Search/Filter datagrid
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string searchValue = textBox1.Text;
+            try
+            {
+               var table = ReadGroupDataBase();
+                var re = from row in table.AsEnumerable()
+                         where row[1].ToString().Contains(searchValue) || row[2].ToString().Contains(searchValue) || row[5].ToString().Contains(searchValue)
+                         select row;
+                if (re.Count() == 0)
+                {
+
+                }
+                else
+                {
+                    dataGrid.DataSource = re.CopyToDataTable();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
