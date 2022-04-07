@@ -33,13 +33,14 @@
             this.tbLastName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.cbGroups = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(449, 46);
+            this.btnAdd.Location = new System.Drawing.Point(223, 75);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(108, 25);
+            this.btnAdd.Size = new System.Drawing.Size(210, 25);
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "Lisää";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -77,11 +78,21 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Sukunimi";
             // 
+            // cbGroups
+            // 
+            this.cbGroups.FormattingEnabled = true;
+            this.cbGroups.Location = new System.Drawing.Point(10, 75);
+            this.cbGroups.Name = "cbGroups";
+            this.cbGroups.Size = new System.Drawing.Size(191, 23);
+            this.cbGroups.TabIndex = 5;
+            this.cbGroups.Enter += new System.EventHandler(this.cbGroups_Enter);
+            // 
             // NewRow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(569, 80);
+            this.ClientSize = new System.Drawing.Size(440, 111);
+            this.Controls.Add(this.cbGroups);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tbLastName);
@@ -102,5 +113,6 @@
         private TextBox tbLastName;
         private Label label1;
         private Label label2;
+        private ComboBox cbGroups;
     }
 }

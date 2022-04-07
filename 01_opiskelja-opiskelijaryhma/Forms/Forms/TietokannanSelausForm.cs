@@ -24,7 +24,7 @@ namespace Forms
             InitializeComponent();
 
             // Load the database when the form starts
-            dataGrid.DataSource = ReadDatabase();
+            RefreshDataGrid();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -40,8 +40,7 @@ namespace Forms
             RunCommandList();
 
             // Update the datagrid
-            dataGrid.DataSource = ReadDatabase();
-
+            RefreshDataGrid();
             // Clear the unsaved changes textbox
             TBLogClear();
         }
@@ -113,21 +112,6 @@ namespace Forms
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbLog_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void tbLog_MouseEnter(object sender, EventArgs e)
         {
             tbLog.Height = 400;
@@ -188,6 +172,13 @@ namespace Forms
 
             }
             commandsToRun.Clear();
+        }
+
+        private void RefreshDataGrid()
+        {
+            dataGrid.DataSource = ReadGroupDataBase();
+            dataGrid.Columns["RyhmaId"].Visible = false;
+            dataGrid.Columns["Id1"].Visible = false;
         }
     }
 }
