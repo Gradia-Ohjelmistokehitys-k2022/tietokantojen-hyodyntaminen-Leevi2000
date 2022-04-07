@@ -48,7 +48,33 @@ namespace Operations
             {
                 _connection.Open();
 
-                SqlDataAdapter dataAdapter = new SqlDataAdapter($"SELECT [dbo].[{_StudentTableName}].*, [dbo].[{_GroupTableName}].* FROM [dbo].[{_StudentTableName}], [dbo].[{_GroupTableName}] WHERE {_StudentTableName}.RyhmaId={_GroupTableName}.Id", _connection);
+                SqlDataAdapter dataAdapter = new SqlDataAdapter($"SELECT * FROM [dbo].[{_StudentTableName}] LEFT JOIN [dbo].[{_GroupTableName}] ON {_StudentTableName}.RyhmaId={_GroupTableName}.Id", _connection);
+                DataTable dataTable = new DataTable();
+                dataAdapter.Fill(dataTable);
+                _connection.Close();
+                return dataTable;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                _connection.Close();
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Takes in custom command. Most preferably select command, since this method returns datatable.
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public static DataTable ReadGivenCommand(string cmd)
+        {
+            SqlConnection _connection = new SqlConnection(_ConnectionString);
+            try
+            {
+                _connection.Open();
+                SqlCommand command = new SqlCommand(cmd, _connection);
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
                 dataAdapter.Fill(dataTable);
                 _connection.Close();

@@ -144,12 +144,28 @@ namespace Forms
         /// </summary>
         private void CreateCommandsOfEditedRows()
         {
+        
             int i = 0;
             foreach (var id in idsOfChangedRows)
             {
+                // Precaution if the row to take the values from is deleted from datagridview.
+                if (rowChanges[i].Cells[1].Value == null) { break; }
+
                 var etuN = rowChanges[i].Cells[1].Value.ToString();
                 var sukuN = rowChanges[i].Cells[2].Value.ToString();
-                string command = ($"UPDATE Opiskelija SET Etunimi = '{etuN}', Sukunimi = '{sukuN}' WHERE Id = {id}");
+                var ryhmaNimi = rowChanges[i].Cells[5].Value.ToString();
+                int ryhmaId = 1;
+
+                // If groupname value is changed, get the id of the name.
+                var x = ReadGivenCommand($"SELECT Id FROM OpiskelijaryhmaTaulu WHERE Ryhmanimi = '{ryhmaNimi}'");
+                foreach (DataRow row in x.Rows)
+                {
+                    foreach (DataColumn column in x.Columns)
+                    {
+                        ryhmaId = int.Parse(row[column].ToString());
+                    }
+                }
+                string command = ($"UPDATE Opiskelija SET Etunimi = '{etuN}', Sukunimi = '{sukuN}', RyhmaId = '{ryhmaId}' WHERE Id = {id}");
                 commandsToRun.Add(command);
                 i++;
             }
@@ -157,6 +173,9 @@ namespace Forms
             // Clear changes lists
             idsOfChangedRows.Clear();
             rowChanges.Clear();
+            
+            
+
         }
 
         private void RunCommandList()

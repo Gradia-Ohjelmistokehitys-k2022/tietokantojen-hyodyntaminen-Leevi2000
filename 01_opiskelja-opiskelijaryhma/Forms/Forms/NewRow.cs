@@ -41,6 +41,11 @@ namespace Forms
             cbGroups.DataSource = groupNameList;
         }
 
+        private void GroupNamesIntoList()
+        {
+
+        }
+
         private void NewRow_Load(object sender, EventArgs e)
         {
 

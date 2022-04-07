@@ -31,7 +31,6 @@
             this.dataGrid = new System.Windows.Forms.DataGridView();
             this.btnSaveChanges = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.tbLog = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
@@ -43,7 +42,7 @@
             this.dataGrid.Location = new System.Drawing.Point(206, 41);
             this.dataGrid.Name = "dataGrid";
             this.dataGrid.RowTemplate.Height = 25;
-            this.dataGrid.Size = new System.Drawing.Size(397, 513);
+            this.dataGrid.Size = new System.Drawing.Size(439, 513);
             this.dataGrid.TabIndex = 0;
             this.dataGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGrid_CellBeginEdit);
             this.dataGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
@@ -65,17 +64,8 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(206, 12);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(304, 23);
+            this.textBox1.Size = new System.Drawing.Size(439, 23);
             this.textBox1.TabIndex = 3;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(528, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // btnAdd
             // 
@@ -101,10 +91,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(613, 583);
+            this.ClientSize = new System.Drawing.Size(651, 583);
             this.Controls.Add(this.tbLog);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.dataGrid);
@@ -121,7 +110,6 @@
         private DataGridView dataGrid;
         private Button btnSaveChanges;
         private TextBox textBox1;
-        private Button button1;
         private Button btnAdd;
         private RichTextBox tbLog;
     }
