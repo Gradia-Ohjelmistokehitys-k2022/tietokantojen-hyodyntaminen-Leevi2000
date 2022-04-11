@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autokauppa.model;
 
 namespace Autokauppa.controller
 {
@@ -25,12 +26,12 @@ namespace Autokauppa.controller
             return didItGoIntoDatabase;
         }
 
-        public List<> getAllAutoMakers() {
+        public List<AutonMerkki> getAllAutoMakers() {
 
             return dbModel.getAllAutoMakersFromDatabase();
         }
 
-        public List<> getAutoModels(int makerId) {
+        public List<AutonMalli> getAutoModels(int makerId) {
 
             return dbModel.getAutoModelsByMakerId(makerId);
         }

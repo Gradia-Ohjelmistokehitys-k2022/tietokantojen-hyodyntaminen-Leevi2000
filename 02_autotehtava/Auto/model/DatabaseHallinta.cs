@@ -1,11 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Data.SqlClient;
+using System.Data;
 
 
 namespace Autokauppa.model
@@ -17,24 +17,23 @@ namespace Autokauppa.model
 
         public DatabaseHallinta()
         {
-           yhteysTiedot = "Leikkaa tähän oma connection string tietokannasta";
+            dbYhteys = new SqlConnection();
+            yhteysTiedot = @"Server = (localdb)\MSSQLLocalDB; Database = Autokauppa; Trusted_Connection = True;";
+            dbYhteys.ConnectionString = yhteysTiedot;
         }
 
         public bool connectDatabase()
         {
-            dbYhteys.ConnectionString = yhteysTiedot;
-            
             try
             { 
                 dbYhteys.Open();
+                dbYhteys.Close();
                 return true;
             }
             catch(Exception e)
             { 
                 Console.WriteLine("Virheilmoitukset:" + e);
-                dbYhteys.Close();
                 return false;
-
             }
             
         }
@@ -52,18 +51,55 @@ namespace Autokauppa.model
             
         }
 
-        public List<> getAllAutoMakersFromDatabase()
+        public List<AutonMerkki> getAllAutoMakersFromDatabase()
         {
-            List<> palaute=null;
-            return palaute;
+            List<AutonMerkki> palaute = new List<AutonMerkki>();
 
+            var dataTable = GetDataTable("SELECT * FROM [dbo].[AutonMerkki]");
+
+            foreach(DataRow row in dataTable.Rows)
+            {
+                AutonMerkki merkki = new AutonMerkki();
+                foreach(DataColumn column in dataTable.Columns)
+                {
+                    if(column.ToString() == "ID")
+                    {
+                        merkki.Id = int.Parse(row[column].ToString());
+                    }
+                    else
+                    {
+                        merkki.Merkki = row[column].ToString();
+                    }
+                }
+                palaute.Add(merkki);
+            }
+            disconnectDatabase();
+            return palaute;
         }
 
-        public List<> getAutoModelsByMakerId(int makerId) 
-             
+        public List<AutonMalli> getAutoModelsByMakerId(int makerId)   
         {
-            List<> palaute = null;
+            var dataTable = GetDataTable($"SELECT * FROM [dbo].[AutonMallit] WHERE AutonMerkkiID = {makerId}");
+            List<AutonMalli> palaute = new List<AutonMalli>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                AutonMalli malli = new AutonMalli();
+                malli.Id = int.Parse(row["ID"].ToString());
+                malli.Nimi = row["Auton_mallin_nimi"].ToString();
+                malli.MerkkiId = int.Parse(row["AutonMerkkiID"].ToString());
+                palaute.Add(malli);
+            }
             return palaute;
+        }
+
+        private DataTable GetDataTable(string cmd)
+        {
+            connectDatabase();
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd, dbYhteys);
+            DataTable dataTable = new DataTable();
+            dataAdapter.Fill(dataTable);
+            disconnectDatabase();
+            return dataTable;
         }
 
     }
