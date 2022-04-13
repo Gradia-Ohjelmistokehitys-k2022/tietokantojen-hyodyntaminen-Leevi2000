@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
-
+using System.Globalization;
 
 namespace Autokauppa.model
 {
@@ -27,11 +27,12 @@ namespace Autokauppa.model
             try
             { 
                 dbYhteys.Open();
-                dbYhteys.Close();
+
                 return true;
             }
             catch(Exception e)
-            { 
+            {
+                dbYhteys.Close();
                 Console.WriteLine("Virheilmoitukset:" + e);
                 return false;
             }
@@ -43,12 +44,25 @@ namespace Autokauppa.model
             dbYhteys.Close();
         }
 
-        public bool saveAutoIntoDatabase(Auto newAuto)
+        public bool SaveCarIntoDB(Auto c)
         {
-            bool palaute = false;
-            return palaute;
+            //  c.RegistryDate is in wrong format so this fixes it.
+            string date = c.RegistryDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            
+            string cmd = ($"INSERT INTO [dbo].[auto]" +
+                $" ([Hinta], [Rekisteri_paivamaara], [Moottorin_tilavuus], [Mittarilukema]," +
+                $" [AutonMerkkiID], [AutonMalliID], [VaritID], [PolttoaineID])" +
+                $" VALUES (@Price, '{date}', @EngineVolume, {c.Meter}, {c.CarBrandId}," +
+                $" {c.CarModelId}, {c.ColorId}, {c.FuelTypeId})");
+
+            connectDatabase();
+            SqlCommand sqlcmd = new SqlCommand(cmd, dbYhteys);
+            sqlcmd.Parameters.AddWithValue("@EngineVolume", c.EngineVolume);
+            sqlcmd.Parameters.AddWithValue("@Price", c.Price);
+            sqlcmd.ExecuteNonQuery();
+            bool success = true;
+            disconnectDatabase();
+            return success;
         }
 
         public List<AutonMerkki> getAllAutoMakersFromDatabase()
@@ -100,6 +114,34 @@ namespace Autokauppa.model
             dataAdapter.Fill(dataTable);
             disconnectDatabase();
             return dataTable;
+        }
+
+        public List<Polttoaine> MGetFuelType()
+        {
+            var dataTable = GetDataTable($"SELECT * FROM [dbo].[Polttoaine]");
+            List<Polttoaine> fuelTypes = new List<Polttoaine>();
+            foreach(DataRow row in dataTable.Rows)
+            {
+                Polttoaine fuel = new Polttoaine();
+                fuel.Id = int.Parse(row["ID"].ToString());
+                fuel.Name = row["Polttoaineen_nimi"].ToString();
+                fuelTypes.Add(fuel);
+            }
+            return fuelTypes;
+        }
+
+        public List<Varit> MGetColors()
+        {
+            var dataTable = GetDataTable($"SELECT * FROM [dbo].[Varit]");
+            List<Varit> colors = new List<Varit>();
+            foreach (DataRow row in dataTable.Rows)
+            {
+                Varit color = new Varit();
+                color.Id = int.Parse(row["ID"].ToString());
+                color.Name = row["Varin_nimi"].ToString();
+                colors.Add(color);
+            }
+            return colors;
         }
 
     }

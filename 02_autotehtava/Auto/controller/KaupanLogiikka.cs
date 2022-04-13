@@ -20,11 +20,11 @@ namespace Autokauppa.controller
             return doesItWork;
         }
 
-        public bool saveAuto(model.Auto newAuto) 
-        {
-            bool didItGoIntoDatabase = dbModel.saveAutoIntoDatabase(newAuto);
-            return didItGoIntoDatabase;
-        }
+        //public bool saveAuto(model.Auto newAuto) 
+        //{
+        //    bool didItGoIntoDatabase = dbModel.saveAutoIntoDatabase(newAuto);
+        //    return didItGoIntoDatabase;
+        //}
 
         public List<AutonMerkki> getAllAutoMakers() {
 
@@ -34,6 +34,22 @@ namespace Autokauppa.controller
         public List<AutonMalli> getAutoModels(int makerId) {
 
             return dbModel.getAutoModelsByMakerId(makerId);
+        }
+
+        public List<Polttoaine> GetFuelType()
+        {
+            return dbModel.MGetFuelType();
+        }
+
+        public List<Varit> GetColors()
+        {
+            return dbModel.MGetColors();
+        }
+
+        public bool SaveCar(model.Auto newCar)
+        {
+            bool success = dbModel.SaveCarIntoDB(newCar);
+            return success;    
         }
     }
 }

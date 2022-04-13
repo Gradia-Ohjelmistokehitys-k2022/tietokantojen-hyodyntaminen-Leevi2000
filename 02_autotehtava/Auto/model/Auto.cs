@@ -9,9 +9,9 @@ namespace Autokauppa.model
     public class Auto
     {
         public int Id { get; set; }
-        public decimal Price { get; set; }
+        public float Price { get; set; }
         public DateTime RegistryDate { get; set; }
-        public decimal EngineVolume { get; set; }
+        public float EngineVolume { get; set; }
         public int Meter { get; set; }
         public int CarBrandId { get; set; }
         public int CarModelId { get; set; }
