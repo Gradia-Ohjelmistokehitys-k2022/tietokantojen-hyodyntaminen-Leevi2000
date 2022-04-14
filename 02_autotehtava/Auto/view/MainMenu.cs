@@ -111,6 +111,10 @@ namespace Autokauppa.view
             registerHandler.SaveCar(newCar);
         }
 
+        /// <summary>
+        /// Enables/disables buttons that user shouldn't press after unsaved changes.
+        /// </summary>
+        /// <param name="enterEditMode"></param>
         private void EditMode(bool enterEditMode = true)
         {
             if (enterEditMode)
@@ -120,8 +124,7 @@ namespace Autokauppa.view
                 btnSeuraava.Enabled = false;
                 btnEdellinen.Enabled = false;
                 btnPoista.Enabled = false;
-                var car = CarInfo();
-                tempCar = car;
+                tempCar = CarInfo();
             }
             else
             {
@@ -147,6 +150,7 @@ namespace Autokauppa.view
             cbMalli.SelectedValue = car.CarModelId;
             cbPolttoaine.SelectedValue = car.FuelTypeId;
             cbVari.SelectedValue = car.ColorId;
+            if (car.Id != 0) tbId.Text = car.Id.ToString();
         }
 
         private model.Auto CarInfo()
@@ -165,6 +169,12 @@ namespace Autokauppa.view
         private void btnPeruuta_Click(object sender, EventArgs e)
         {
             EditMode(false);
+            WriteCarInfo(tempCar);
+        }
+
+        private void btnSeuraava_Click(object sender, EventArgs e)
+        {
+            tempCar = registerHandler.GetNextCar(tempCar.Id);
             WriteCarInfo(tempCar);
         }
     }

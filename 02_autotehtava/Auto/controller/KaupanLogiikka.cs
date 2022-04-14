@@ -51,5 +51,10 @@ namespace Autokauppa.controller
             bool success = dbModel.SaveCarIntoDB(newCar);
             return success;    
         }
+
+        public Auto GetNextCar(int currentId, bool getPrevious = false)
+        {
+            return dbModel.MGetNextCar(currentId, getPrevious);
+        }
     }
 }

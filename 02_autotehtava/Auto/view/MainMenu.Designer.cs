@@ -70,6 +70,7 @@
             this.btnSeuraava.TabIndex = 17;
             this.btnSeuraava.Text = "Seuraava";
             this.btnSeuraava.UseVisualStyleBackColor = true;
+            this.btnSeuraava.Click += new System.EventHandler(this.btnSeuraava_Click);
             // 
             // gbAuto
             // 

@@ -48,12 +48,26 @@ namespace Autokauppa.model
         {
             //  c.RegistryDate is in wrong format so this fixes it.
             string date = c.RegistryDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            string cmd;
 
-            string cmd = ($"INSERT INTO [dbo].[auto]" +
+            if (c.Id == 0)
+            {
+                cmd = ($"INSERT INTO [dbo].[auto]" +
                 $" ([Hinta], [Rekisteri_paivamaara], [Moottorin_tilavuus], [Mittarilukema]," +
                 $" [AutonMerkkiID], [AutonMalliID], [VaritID], [PolttoaineID])" +
                 $" VALUES (@Price, '{date}', @EngineVolume, {c.Meter}, {c.CarBrandId}," +
                 $" {c.CarModelId}, {c.ColorId}, {c.FuelTypeId})");
+            }
+            else
+            {
+                cmd = ($"INSERT INTO [dbo].[auto]" +
+                $" ([Hinta], [Rekisteri_paivamaara], [Moottorin_tilavuus], [Mittarilukema]," +
+                $" [AutonMerkkiID], [AutonMalliID], [VaritID], [PolttoaineID])" +
+                $" VALUES (@Price, '{date}', @EngineVolume, {c.Meter}, {c.CarBrandId}," +
+                $" {c.CarModelId}, {c.ColorId}, {c.FuelTypeId})" +
+                $" WHERE ID = {c.Id}");
+            }
+            
 
             connectDatabase();
             SqlCommand sqlcmd = new SqlCommand(cmd, dbYhteys);
@@ -144,5 +158,58 @@ namespace Autokauppa.model
             return colors;
         }
 
+        public Auto MGetNextCar(int id, bool getPrevious = false)
+        {
+            DataTable carDataTable = new DataTable();
+            Auto newCar = new Auto();
+            int currentId = id;
+
+            
+            
+            if (currentId == 0) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC"); }
+
+            else if (getPrevious == true) 
+            {
+                var highestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID DESC").Rows);
+
+                if (currentId != highestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID ASC "); } 
+                else
+                {
+                    GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID = {currentId} ORDER BY ID ASC");
+                }
+            }
+
+            else if (getPrevious == false) 
+            {
+                var lowestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC").Rows);
+
+                if (currentId != lowestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID DESC "); }
+                else
+                {
+                    GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID = {currentId} ORDER BY ID ASC");
+                }
+            }
+
+            // Creating a car from DataRow
+            foreach (DataRow r in carDataTable.Rows)
+            {
+                newCar.Id = int.Parse(r["ID"].ToString());
+                newCar.Price = float.Parse(r["Hinta"].ToString());
+                newCar.RegistryDate = DateTime.Parse(r["Rekisteri_paivamaara"].ToString());
+                newCar.EngineVolume = float.Parse(r["Moottorin_tilavuus"].ToString());
+                newCar.Meter = int.Parse(r["Mittarilukema"].ToString());
+                newCar.CarBrandId = int.Parse(r["AutonMerkkiID"].ToString());
+                newCar.CarModelId = int.Parse(r["AutonMalliID"].ToString());
+                newCar.ColorId = int.Parse(r["VaritID"].ToString());
+                newCar.FuelTypeId = int.Parse(r["PolttoaineID"].ToString());
+            }
+         
+            return newCar;
+        }
+
+        private int GetCarIDFromRow(DataRowCollection row)
+        {
+            return int.Parse(row[0]["ID"].ToString());
+        }
     }
 }
