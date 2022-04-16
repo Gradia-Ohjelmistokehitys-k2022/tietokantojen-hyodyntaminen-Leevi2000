@@ -57,17 +57,24 @@
             this.btnPoista = new System.Windows.Forms.Button();
             this.btnTallenna = new System.Windows.Forms.Button();
             this.btnPeruuta = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.BtnHae = new System.Windows.Forms.Button();
+            this.GBHaku = new System.Windows.Forms.GroupBox();
+            this.DataGrid = new System.Windows.Forms.DataGridView();
             this.gbAuto.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.GBHaku.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSeuraava
             // 
-            this.btnSeuraava.Location = new System.Drawing.Point(83, 185);
+            this.btnSeuraava.Location = new System.Drawing.Point(83, 187);
             this.btnSeuraava.Margin = new System.Windows.Forms.Padding(2);
             this.btnSeuraava.Name = "btnSeuraava";
             this.btnSeuraava.Size = new System.Drawing.Size(70, 27);
-            this.btnSeuraava.TabIndex = 31;
+            this.btnSeuraava.TabIndex = 35;
             this.btnSeuraava.Text = "Seuraava";
             this.btnSeuraava.UseVisualStyleBackColor = true;
             this.btnSeuraava.Click += new System.EventHandler(this.btnSeuraava_Click);
@@ -123,9 +130,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(10, 50);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.Size = new System.Drawing.Size(94, 13);
             this.label6.TabIndex = 31;
-            this.label6.Text = "Pvm:";
+            this.label6.Text = "Rekisteröintipäivä:";
             // 
             // label5
             // 
@@ -270,11 +277,11 @@
             // 
             // btnEdellinen
             // 
-            this.btnEdellinen.Location = new System.Drawing.Point(9, 185);
+            this.btnEdellinen.Location = new System.Drawing.Point(9, 187);
             this.btnEdellinen.Margin = new System.Windows.Forms.Padding(2);
             this.btnEdellinen.Name = "btnEdellinen";
             this.btnEdellinen.Size = new System.Drawing.Size(70, 27);
-            this.btnEdellinen.TabIndex = 30;
+            this.btnEdellinen.TabIndex = 34;
             this.btnEdellinen.Text = "Edellinen";
             this.btnEdellinen.UseVisualStyleBackColor = true;
             this.btnEdellinen.Click += new System.EventHandler(this.btnEdellinen_Click);
@@ -288,7 +295,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(453, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(525, 24);
             this.menuStrip1.TabIndex = 20;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -325,11 +332,11 @@
             // btnLisaa
             // 
             this.btnLisaa.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.btnLisaa.Location = new System.Drawing.Point(368, 185);
+            this.btnLisaa.Location = new System.Drawing.Point(439, 40);
             this.btnLisaa.Margin = new System.Windows.Forms.Padding(2);
             this.btnLisaa.Name = "btnLisaa";
-            this.btnLisaa.Size = new System.Drawing.Size(67, 27);
-            this.btnLisaa.TabIndex = 33;
+            this.btnLisaa.Size = new System.Drawing.Size(70, 27);
+            this.btnLisaa.TabIndex = 30;
             this.btnLisaa.Text = "Uusi";
             this.btnLisaa.UseVisualStyleBackColor = false;
             this.btnLisaa.Click += new System.EventHandler(this.btnLisaa_Click);
@@ -337,10 +344,10 @@
             // btnPoista
             // 
             this.btnPoista.BackColor = System.Drawing.Color.LightCoral;
-            this.btnPoista.Location = new System.Drawing.Point(296, 185);
+            this.btnPoista.Location = new System.Drawing.Point(439, 138);
             this.btnPoista.Name = "btnPoista";
-            this.btnPoista.Size = new System.Drawing.Size(67, 27);
-            this.btnPoista.TabIndex = 32;
+            this.btnPoista.Size = new System.Drawing.Size(70, 27);
+            this.btnPoista.TabIndex = 33;
             this.btnPoista.Text = "Poista";
             this.btnPoista.UseVisualStyleBackColor = false;
             // 
@@ -348,10 +355,10 @@
             // 
             this.btnTallenna.BackColor = System.Drawing.Color.YellowGreen;
             this.btnTallenna.Enabled = false;
-            this.btnTallenna.Location = new System.Drawing.Point(10, 217);
+            this.btnTallenna.Location = new System.Drawing.Point(439, 72);
             this.btnTallenna.Name = "btnTallenna";
-            this.btnTallenna.Size = new System.Drawing.Size(69, 27);
-            this.btnTallenna.TabIndex = 34;
+            this.btnTallenna.Size = new System.Drawing.Size(70, 27);
+            this.btnTallenna.TabIndex = 31;
             this.btnTallenna.Text = "Tallenna";
             this.btnTallenna.UseVisualStyleBackColor = false;
             this.btnTallenna.Click += new System.EventHandler(this.btnTallenna_Click);
@@ -360,19 +367,66 @@
             // 
             this.btnPeruuta.BackColor = System.Drawing.Color.LightCoral;
             this.btnPeruuta.Enabled = false;
-            this.btnPeruuta.Location = new System.Drawing.Point(83, 217);
+            this.btnPeruuta.Location = new System.Drawing.Point(439, 105);
             this.btnPeruuta.Name = "btnPeruuta";
             this.btnPeruuta.Size = new System.Drawing.Size(70, 27);
-            this.btnPeruuta.TabIndex = 35;
+            this.btnPeruuta.TabIndex = 32;
             this.btnPeruuta.Text = "Peruuta";
             this.btnPeruuta.UseVisualStyleBackColor = false;
             this.btnPeruuta.Click += new System.EventHandler(this.btnPeruuta_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(230, 187);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(203, 20);
+            this.textBox1.TabIndex = 36;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(158, 187);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(66, 21);
+            this.comboBox1.TabIndex = 37;
+            // 
+            // BtnHae
+            // 
+            this.BtnHae.Location = new System.Drawing.Point(439, 187);
+            this.BtnHae.Name = "BtnHae";
+            this.BtnHae.Size = new System.Drawing.Size(70, 27);
+            this.BtnHae.TabIndex = 38;
+            this.BtnHae.Text = "Hae";
+            this.BtnHae.UseVisualStyleBackColor = true;
+            this.BtnHae.Click += new System.EventHandler(this.BtnHae_Click);
+            // 
+            // GBHaku
+            // 
+            this.GBHaku.Controls.Add(this.DataGrid);
+            this.GBHaku.Location = new System.Drawing.Point(9, 220);
+            this.GBHaku.Name = "GBHaku";
+            this.GBHaku.Size = new System.Drawing.Size(500, 296);
+            this.GBHaku.TabIndex = 39;
+            this.GBHaku.TabStop = false;
+            this.GBHaku.Text = "Haun tulokset";
+            // 
+            // DataGrid
+            // 
+            this.DataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGrid.Location = new System.Drawing.Point(4, 20);
+            this.DataGrid.Name = "DataGrid";
+            this.DataGrid.Size = new System.Drawing.Size(490, 270);
+            this.DataGrid.TabIndex = 0;
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(453, 293);
+            this.ClientSize = new System.Drawing.Size(525, 528);
+            this.Controls.Add(this.GBHaku);
+            this.Controls.Add(this.BtnHae);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnPeruuta);
             this.Controls.Add(this.btnTallenna);
             this.Controls.Add(this.btnPoista);
@@ -388,6 +442,8 @@
             this.gbAuto.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.GBHaku.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -423,5 +479,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnPeruuta;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button BtnHae;
+        private System.Windows.Forms.GroupBox GBHaku;
+        private System.Windows.Forms.DataGridView DataGrid;
     }
 }

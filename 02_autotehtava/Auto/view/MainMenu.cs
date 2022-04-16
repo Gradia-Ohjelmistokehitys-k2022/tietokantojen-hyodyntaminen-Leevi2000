@@ -237,5 +237,10 @@ namespace Autokauppa.view
                 EditMode();
             }
         }
+
+        private void BtnHae_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
