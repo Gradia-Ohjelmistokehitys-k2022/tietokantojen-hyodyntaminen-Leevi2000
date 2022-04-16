@@ -154,6 +154,8 @@
             this.cbPolttoaine.Name = "cbPolttoaine";
             this.cbPolttoaine.Size = new System.Drawing.Size(92, 21);
             this.cbPolttoaine.TabIndex = 27;
+            this.cbPolttoaine.Click += new System.EventHandler(this.ModifyComboBox);
+            this.cbPolttoaine.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // label3
             // 
@@ -173,6 +175,8 @@
             this.cbVari.Name = "cbVari";
             this.cbVari.Size = new System.Drawing.Size(92, 21);
             this.cbVari.TabIndex = 26;
+            this.cbVari.Click += new System.EventHandler(this.ModifyComboBox);
+            this.cbVari.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // label2
             // 
@@ -192,16 +196,18 @@
             this.cbMalli.Name = "cbMalli";
             this.cbMalli.Size = new System.Drawing.Size(92, 21);
             this.cbMalli.TabIndex = 25;
+            this.cbMalli.Click += new System.EventHandler(this.ModifyComboBox);
+            this.cbMalli.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // dtpPaiva
             // 
+            this.dtpPaiva.Enabled = false;
             this.dtpPaiva.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtpPaiva.Location = new System.Drawing.Point(107, 47);
             this.dtpPaiva.Margin = new System.Windows.Forms.Padding(2);
             this.dtpPaiva.Name = "dtpPaiva";
             this.dtpPaiva.Size = new System.Drawing.Size(112, 20);
             this.dtpPaiva.TabIndex = 21;
-            this.dtpPaiva.ValueChanged += new System.EventHandler(this.dtpPaiva_ValueChanged);
             // 
             // tbMittarilukema
             // 
@@ -210,6 +216,7 @@
             this.tbMittarilukema.Name = "tbMittarilukema";
             this.tbMittarilukema.Size = new System.Drawing.Size(112, 20);
             this.tbMittarilukema.TabIndex = 22;
+            this.tbMittarilukema.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // tbTilavuus
             // 
@@ -218,7 +225,7 @@
             this.tbTilavuus.Name = "tbTilavuus";
             this.tbTilavuus.Size = new System.Drawing.Size(112, 20);
             this.tbTilavuus.TabIndex = 23;
-            this.tbTilavuus.TextChanged += new System.EventHandler(this.tbTilavuus_TextChanged);
+            this.tbTilavuus.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // tbHinta
             // 
@@ -227,6 +234,7 @@
             this.tbHinta.Name = "tbHinta";
             this.tbHinta.Size = new System.Drawing.Size(112, 20);
             this.tbHinta.TabIndex = 20;
+            this.tbHinta.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // tbId
             // 
@@ -257,6 +265,8 @@
             this.cbMerkki.Size = new System.Drawing.Size(92, 21);
             this.cbMerkki.TabIndex = 24;
             this.cbMerkki.SelectedIndexChanged += new System.EventHandler(this.cbMerkki_SelectedIndexChanged);
+            this.cbMerkki.Click += new System.EventHandler(this.ModifyComboBox);
+            this.cbMerkki.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ValueChanged);
             // 
             // btnEdellinen
             // 

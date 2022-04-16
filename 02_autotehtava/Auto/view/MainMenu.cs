@@ -19,6 +19,8 @@ namespace Autokauppa.view
 
         readonly KaupanLogiikka registerHandler;
 
+        private bool editing = false;
+
         public MainMenu()
         {
             registerHandler = new KaupanLogiikka();
@@ -84,10 +86,7 @@ namespace Autokauppa.view
 
         }
 
-        private void dtpPaiva_ValueChanged(object sender, EventArgs e)
-        {
 
-        }
         private void ClearText()
         {
             cbMalli.Text = null;
@@ -129,11 +128,13 @@ namespace Autokauppa.view
         {
             if (enterEditMode)
             {
+                editing = true;
                 btnTallenna.Enabled = true;
                 btnPeruuta.Enabled = true;
                 btnSeuraava.Enabled = false;
                 btnEdellinen.Enabled = false;
                 btnPoista.Enabled = false;
+                dtpPaiva.Enabled = true;
                 tempCar = CarInfo();
             }
             else
@@ -143,6 +144,8 @@ namespace Autokauppa.view
                 btnSeuraava.Enabled = true;
                 btnEdellinen.Enabled = true;
                 btnPoista.Enabled = true;
+                dtpPaiva.Enabled = false;
+                editing = false;
             }
         }
 
@@ -212,6 +215,27 @@ namespace Autokauppa.view
         {
             tempCar = registerHandler.GetNextCar(tempCar.Id, true);
             WriteCarInfo(tempCar);
+        }
+
+        /// <summary>
+        /// If user starts editing currently shown info, enter edit mode.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ValueChanged(object sender, KeyEventArgs e)
+        {
+            if (!editing)
+            {
+                EditMode();
+            }
+        }
+
+        private void ModifyComboBox(object sender, EventArgs e)
+        {
+            if (!editing)
+            {
+                EditMode();
+            }
         }
     }
 }
