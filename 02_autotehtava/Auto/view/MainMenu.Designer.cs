@@ -67,7 +67,7 @@
             this.btnSeuraava.Margin = new System.Windows.Forms.Padding(2);
             this.btnSeuraava.Name = "btnSeuraava";
             this.btnSeuraava.Size = new System.Drawing.Size(70, 27);
-            this.btnSeuraava.TabIndex = 17;
+            this.btnSeuraava.TabIndex = 31;
             this.btnSeuraava.Text = "Seuraava";
             this.btnSeuraava.UseVisualStyleBackColor = true;
             this.btnSeuraava.Click += new System.EventHandler(this.btnSeuraava_Click);
@@ -153,7 +153,7 @@
             this.cbPolttoaine.Margin = new System.Windows.Forms.Padding(2);
             this.cbPolttoaine.Name = "cbPolttoaine";
             this.cbPolttoaine.Size = new System.Drawing.Size(92, 21);
-            this.cbPolttoaine.TabIndex = 28;
+            this.cbPolttoaine.TabIndex = 27;
             // 
             // label3
             // 
@@ -191,7 +191,7 @@
             this.cbMalli.Margin = new System.Windows.Forms.Padding(2);
             this.cbMalli.Name = "cbMalli";
             this.cbMalli.Size = new System.Drawing.Size(92, 21);
-            this.cbMalli.TabIndex = 24;
+            this.cbMalli.TabIndex = 25;
             // 
             // dtpPaiva
             // 
@@ -200,7 +200,7 @@
             this.dtpPaiva.Margin = new System.Windows.Forms.Padding(2);
             this.dtpPaiva.Name = "dtpPaiva";
             this.dtpPaiva.Size = new System.Drawing.Size(112, 20);
-            this.dtpPaiva.TabIndex = 23;
+            this.dtpPaiva.TabIndex = 21;
             this.dtpPaiva.ValueChanged += new System.EventHandler(this.dtpPaiva_ValueChanged);
             // 
             // tbMittarilukema
@@ -217,7 +217,7 @@
             this.tbTilavuus.Margin = new System.Windows.Forms.Padding(2);
             this.tbTilavuus.Name = "tbTilavuus";
             this.tbTilavuus.Size = new System.Drawing.Size(112, 20);
-            this.tbTilavuus.TabIndex = 21;
+            this.tbTilavuus.TabIndex = 23;
             this.tbTilavuus.TextChanged += new System.EventHandler(this.tbTilavuus_TextChanged);
             // 
             // tbHinta
@@ -235,7 +235,7 @@
             this.tbId.Name = "tbId";
             this.tbId.ReadOnly = true;
             this.tbId.Size = new System.Drawing.Size(92, 20);
-            this.tbId.TabIndex = 19;
+            this.tbId.TabIndex = 29;
             this.tbId.TextChanged += new System.EventHandler(this.tbId_TextChanged);
             // 
             // label1
@@ -255,7 +255,7 @@
             this.cbMerkki.Margin = new System.Windows.Forms.Padding(2);
             this.cbMerkki.Name = "cbMerkki";
             this.cbMerkki.Size = new System.Drawing.Size(92, 21);
-            this.cbMerkki.TabIndex = 17;
+            this.cbMerkki.TabIndex = 24;
             this.cbMerkki.SelectedIndexChanged += new System.EventHandler(this.cbMerkki_SelectedIndexChanged);
             // 
             // btnEdellinen
@@ -264,9 +264,10 @@
             this.btnEdellinen.Margin = new System.Windows.Forms.Padding(2);
             this.btnEdellinen.Name = "btnEdellinen";
             this.btnEdellinen.Size = new System.Drawing.Size(70, 27);
-            this.btnEdellinen.TabIndex = 19;
+            this.btnEdellinen.TabIndex = 30;
             this.btnEdellinen.Text = "Edellinen";
             this.btnEdellinen.UseVisualStyleBackColor = true;
+            this.btnEdellinen.Click += new System.EventHandler(this.btnEdellinen_Click);
             // 
             // menuStrip1
             // 
@@ -313,44 +314,48 @@
             // 
             // btnLisaa
             // 
+            this.btnLisaa.BackColor = System.Drawing.Color.PaleTurquoise;
             this.btnLisaa.Location = new System.Drawing.Point(368, 185);
             this.btnLisaa.Margin = new System.Windows.Forms.Padding(2);
             this.btnLisaa.Name = "btnLisaa";
             this.btnLisaa.Size = new System.Drawing.Size(67, 27);
-            this.btnLisaa.TabIndex = 21;
+            this.btnLisaa.TabIndex = 33;
             this.btnLisaa.Text = "Uusi";
-            this.btnLisaa.UseVisualStyleBackColor = true;
+            this.btnLisaa.UseVisualStyleBackColor = false;
             this.btnLisaa.Click += new System.EventHandler(this.btnLisaa_Click);
             // 
             // btnPoista
             // 
+            this.btnPoista.BackColor = System.Drawing.Color.LightCoral;
             this.btnPoista.Location = new System.Drawing.Point(296, 185);
             this.btnPoista.Name = "btnPoista";
             this.btnPoista.Size = new System.Drawing.Size(67, 27);
-            this.btnPoista.TabIndex = 22;
+            this.btnPoista.TabIndex = 32;
             this.btnPoista.Text = "Poista";
-            this.btnPoista.UseVisualStyleBackColor = true;
+            this.btnPoista.UseVisualStyleBackColor = false;
             // 
             // btnTallenna
             // 
+            this.btnTallenna.BackColor = System.Drawing.Color.YellowGreen;
             this.btnTallenna.Enabled = false;
             this.btnTallenna.Location = new System.Drawing.Point(10, 217);
             this.btnTallenna.Name = "btnTallenna";
             this.btnTallenna.Size = new System.Drawing.Size(69, 27);
-            this.btnTallenna.TabIndex = 23;
+            this.btnTallenna.TabIndex = 34;
             this.btnTallenna.Text = "Tallenna";
-            this.btnTallenna.UseVisualStyleBackColor = true;
+            this.btnTallenna.UseVisualStyleBackColor = false;
             this.btnTallenna.Click += new System.EventHandler(this.btnTallenna_Click);
             // 
             // btnPeruuta
             // 
+            this.btnPeruuta.BackColor = System.Drawing.Color.LightCoral;
             this.btnPeruuta.Enabled = false;
             this.btnPeruuta.Location = new System.Drawing.Point(83, 217);
             this.btnPeruuta.Name = "btnPeruuta";
             this.btnPeruuta.Size = new System.Drawing.Size(70, 27);
-            this.btnPeruuta.TabIndex = 24;
+            this.btnPeruuta.TabIndex = 35;
             this.btnPeruuta.Text = "Peruuta";
-            this.btnPeruuta.UseVisualStyleBackColor = true;
+            this.btnPeruuta.UseVisualStyleBackColor = false;
             this.btnPeruuta.Click += new System.EventHandler(this.btnPeruuta_Click);
             // 
             // MainMenu

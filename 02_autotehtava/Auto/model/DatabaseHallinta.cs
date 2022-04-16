@@ -144,6 +144,10 @@ namespace Autokauppa.model
             return fuelTypes;
         }
 
+        /// <summary>
+        /// Returns a list of possible color variations from database.
+        /// </summary>
+        /// <returns></returns>
         public List<Varit> MGetColors()
         {
             var dataTable = GetDataTable($"SELECT * FROM [dbo].[Varit]");
@@ -158,35 +162,39 @@ namespace Autokauppa.model
             return colors;
         }
 
+        /// <summary>
+        /// Gets previous or next car in database by ID from database and returns Car (Auto) object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="getPrevious"></param>
+        /// <returns></returns>
         public Auto MGetNextCar(int id, bool getPrevious = false)
         {
             DataTable carDataTable = new DataTable();
             Auto newCar = new Auto();
             int currentId = id;
 
-            
-            
             if (currentId == 0) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC"); }
 
             else if (getPrevious == true) 
             {
-                var highestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID DESC").Rows);
+                var lowestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC").Rows);
 
-                if (currentId != highestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID ASC "); } 
+                if (currentId > lowestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID DESC "); } 
                 else
                 {
-                    GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID = {currentId} ORDER BY ID ASC");
+                    carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID DESC");
                 }
             }
 
             else if (getPrevious == false) 
             {
-                var lowestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC").Rows);
+                var highestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID DESC").Rows);
 
-                if (currentId != lowestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID DESC "); }
+                if (currentId < highestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID ASC "); }
                 else
                 {
-                    GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID = {currentId} ORDER BY ID ASC");
+                    carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID ASC");
                 }
             }
 

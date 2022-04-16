@@ -64,6 +64,11 @@ namespace Autokauppa.view
          
         }
 
+        /// <summary>
+        /// Change model combobox items after after choosin different brand.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbMerkki_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbMerkki.SelectedIndex != -1)
@@ -104,6 +109,11 @@ namespace Autokauppa.view
             dtpPaiva.Text = DateTime.Now.ToString();
         }
 
+        /// <summary>
+        /// Save the car after altering info.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTallenna_Click(object sender, EventArgs e)
         {
             var newCar = CarInfo();
@@ -112,7 +122,7 @@ namespace Autokauppa.view
         }
 
         /// <summary>
-        /// Enables/disables buttons that user shouldn't press after unsaved changes.
+        /// Enables/disables buttons that user shouldn't press after unsaved changes. (Save and Cancel buttons.)
         /// </summary>
         /// <param name="enterEditMode"></param>
         private void EditMode(bool enterEditMode = true)
@@ -130,14 +140,14 @@ namespace Autokauppa.view
             {
                 btnTallenna.Enabled = false;
                 btnPeruuta.Enabled = false;
-                btnSeuraava.Enabled = false;
+                btnSeuraava.Enabled = true;
                 btnEdellinen.Enabled = true;
                 btnPoista.Enabled = true;
             }
         }
 
         /// <summary>
-        /// Writes the car info from object to the user.
+        /// Writes the car info from object to the screen/form text boxes.
         /// </summary>
         /// <param name="car"></param>
         private void WriteCarInfo(model.Auto car)
@@ -153,6 +163,10 @@ namespace Autokauppa.view
             if (car.Id != 0) tbId.Text = car.Id.ToString();
         }
 
+        /// <summary>
+        /// Gets values from text boxes and returns a Car (Auto) object.
+        /// </summary>
+        /// <returns></returns>
         private model.Auto CarInfo()
         {
             model.Auto car = new model.Auto();
@@ -166,15 +180,37 @@ namespace Autokauppa.view
             if (cbVari.SelectedValue != null) car.ColorId = int.Parse(cbVari.SelectedValue.ToString());
             return car;
         }
+
+        /// <summary>
+        /// After making changes and canceling them.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnPeruuta_Click(object sender, EventArgs e)
         {
             EditMode(false);
             WriteCarInfo(tempCar);
         }
 
+        /// <summary>
+        /// Gets next car from database. (By id)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSeuraava_Click(object sender, EventArgs e)
         {
             tempCar = registerHandler.GetNextCar(tempCar.Id);
+            WriteCarInfo(tempCar);
+        }
+
+        /// <summary>
+        /// Gets previous car from database. (By id)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnEdellinen_Click(object sender, EventArgs e)
+        {
+            tempCar = registerHandler.GetNextCar(tempCar.Id, true);
             WriteCarInfo(tempCar);
         }
     }
