@@ -219,5 +219,49 @@ namespace Autokauppa.model
         {
             return int.Parse(row[0]["ID"].ToString());
         }
+
+        public DataTable MUserSearch(Haku search)
+        {
+            DataTable dt = new DataTable();
+            string cmd;
+
+            if (search.HakuSana != null && search.HakuKategoria != null)
+            {
+                // SQLCommand with Category and word
+                cmd = $"SELECT * FROM [dbo].[auto] WHERE {search.HakuKategoria} CONTAINS {search.HakuSana}";
+                dt = GetDataTable(cmd);
+            }
+            else if (search.HakuKategoria != null)
+            {
+                // SQLCommand with Category
+            }
+            else if (search.HakuSana != null)
+            {
+                // SQLCommand with word
+            }
+
+            return dt;
+        }
+
+        public List<HakuKategoria> MGetCarDBColumns()
+        {
+            var r = GetDataTable("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'auto' ORDER BY ORDINAL_POSITION").Rows;
+            List<HakuKategoria> list = new List<HakuKategoria>();
+
+           
+
+            list.Add(new HakuKategoria(r[1]["COLUMN_NAME"].ToString(), "Hinta"));
+            list.Add(new HakuKategoria(r[2]["COLUMN_NAME"].ToString(), "Rekisteröintipäivä"));
+            list.Add(new HakuKategoria(r[3]["COLUMN_NAME"].ToString(), "Moottorin tilavuus"));
+            list.Add(new HakuKategoria(r[4]["COLUMN_NAME"].ToString(), "Mittarilukema"));
+            list.Add(new HakuKategoria(r[5]["COLUMN_NAME"].ToString(), "Auton Merkki"));
+
+
+
+
+
+
+            return list;
+        }
     }
 }

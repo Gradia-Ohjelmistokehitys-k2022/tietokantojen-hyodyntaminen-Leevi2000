@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autokauppa.model;
+using System.Data;
 
 namespace Autokauppa.controller
 {
@@ -55,6 +56,16 @@ namespace Autokauppa.controller
         public Auto GetNextCar(int currentId, bool getPrevious = false)
         {
             return dbModel.MGetNextCar(currentId, getPrevious);
+        }
+
+        public DataTable UserSearch(Haku search)
+        {
+            return dbModel.MUserSearch(search);
+        }
+
+        public List<HakuKategoria> GetCarDBColumns()
+        {
+            return (dbModel.MGetCarDBColumns());
         }
     }
 }

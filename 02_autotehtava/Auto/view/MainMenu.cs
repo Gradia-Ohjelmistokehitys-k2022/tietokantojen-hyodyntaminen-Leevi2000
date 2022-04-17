@@ -36,6 +36,8 @@ namespace Autokauppa.view
             cbPolttoaine.ValueMember = "Id";
             cbPolttoaine.DisplayMember = "Name";
             cbPolttoaine.DataSource = registerHandler.GetFuelType();
+
+          //  CBKategoria.DataSource = registerHandler.GetCarDBColumns();
         }
 
  
@@ -240,7 +242,10 @@ namespace Autokauppa.view
 
         private void BtnHae_Click(object sender, EventArgs e)
         {
+            model.Haku haku = new model.Haku(CBKategoria.Text, TBHakusana.Text);
+            // Hae datatable perustuen haun parametreihin
 
+            // Aseta datatable datagridviewille
         }
     }
 }

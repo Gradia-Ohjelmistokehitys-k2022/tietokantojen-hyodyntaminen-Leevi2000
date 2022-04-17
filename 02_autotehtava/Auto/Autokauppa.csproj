@@ -51,6 +51,8 @@
     <Compile Include="model\AutonMerkki.cs" />
     <Compile Include="model\DatabaseHallinta.cs" />
     <Compile Include="model\Auto.cs" />
+    <Compile Include="model\Haku.cs" />
+    <Compile Include="model\HakuKategoria.cs" />
     <Compile Include="model\Polttoaine.cs" />
     <Compile Include="model\Varit.cs" />
     <Compile Include="Program.cs" />

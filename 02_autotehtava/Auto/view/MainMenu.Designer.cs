@@ -57,8 +57,8 @@
             this.btnPoista = new System.Windows.Forms.Button();
             this.btnTallenna = new System.Windows.Forms.Button();
             this.btnPeruuta = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.TBHakusana = new System.Windows.Forms.TextBox();
+            this.CBKategoria = new System.Windows.Forms.ComboBox();
             this.BtnHae = new System.Windows.Forms.Button();
             this.GBHaku = new System.Windows.Forms.GroupBox();
             this.DataGrid = new System.Windows.Forms.DataGridView();
@@ -375,20 +375,20 @@
             this.btnPeruuta.UseVisualStyleBackColor = false;
             this.btnPeruuta.Click += new System.EventHandler(this.btnPeruuta_Click);
             // 
-            // textBox1
+            // TBHakusana
             // 
-            this.textBox1.Location = new System.Drawing.Point(230, 187);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(203, 20);
-            this.textBox1.TabIndex = 36;
+            this.TBHakusana.Location = new System.Drawing.Point(230, 187);
+            this.TBHakusana.Name = "TBHakusana";
+            this.TBHakusana.Size = new System.Drawing.Size(203, 20);
+            this.TBHakusana.TabIndex = 36;
             // 
-            // comboBox1
+            // CBKategoria
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(158, 187);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(66, 21);
-            this.comboBox1.TabIndex = 37;
+            this.CBKategoria.FormattingEnabled = true;
+            this.CBKategoria.Location = new System.Drawing.Point(158, 187);
+            this.CBKategoria.Name = "CBKategoria";
+            this.CBKategoria.Size = new System.Drawing.Size(66, 21);
+            this.CBKategoria.TabIndex = 37;
             // 
             // BtnHae
             // 
@@ -425,8 +425,8 @@
             this.ClientSize = new System.Drawing.Size(525, 528);
             this.Controls.Add(this.GBHaku);
             this.Controls.Add(this.BtnHae);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.CBKategoria);
+            this.Controls.Add(this.TBHakusana);
             this.Controls.Add(this.btnPeruuta);
             this.Controls.Add(this.btnTallenna);
             this.Controls.Add(this.btnPoista);
@@ -479,8 +479,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnPeruuta;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox TBHakusana;
+        private System.Windows.Forms.ComboBox CBKategoria;
         private System.Windows.Forms.Button BtnHae;
         private System.Windows.Forms.GroupBox GBHaku;
         private System.Windows.Forms.DataGridView DataGrid;
