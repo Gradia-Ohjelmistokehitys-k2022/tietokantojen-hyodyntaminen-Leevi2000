@@ -228,7 +228,12 @@ namespace Autokauppa.model
             if (search.HakuSana != null && search.HakuKategoria != null)
             {
                 // SQLCommand with Category and word
-                cmd = $"SELECT * FROM [dbo].[auto] WHERE {search.HakuKategoria} CONTAINS {search.HakuSana}";
+                cmd = $"SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, e.Varin_nimi AS Väri FROM [dbo].[auto] a " +
+                    $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID AND " +
+                    $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
+                    $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
+                    $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID " +
+                    $"WHERE {search.HakuKategoria} LIKE {search.HakuSana}";
                 dt = GetDataTable(cmd);
             }
             else if (search.HakuKategoria != null)
@@ -255,7 +260,9 @@ namespace Autokauppa.model
             list.Add(new HakuKategoria(r[3]["COLUMN_NAME"].ToString(), "Moottorin tilavuus"));
             list.Add(new HakuKategoria(r[4]["COLUMN_NAME"].ToString(), "Mittarilukema"));
             list.Add(new HakuKategoria(r[5]["COLUMN_NAME"].ToString(), "Auton Merkki"));
-
+            list.Add(new HakuKategoria(r[6]["COLUMN_NAME"].ToString(), "Auton Malli"));
+            list.Add(new HakuKategoria(r[7]["COLUMN_NAME"].ToString(), "Väri"));
+            list.Add(new HakuKategoria(r[8]["COLUMN_NAME"].ToString(), "Polttoaine"));
 
 
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using Autokauppa.controller;
+using System.Globalization;
 
 namespace Autokauppa.view
 {
@@ -20,6 +21,10 @@ namespace Autokauppa.view
         readonly KaupanLogiikka registerHandler;
 
         private bool editing = false;
+        TextBox tbSearch;
+        DateTimePicker dtSearch;
+        ComboBox cbSearch;
+        ComboBox cbSearch2;
 
         public MainMenu()
         {
@@ -37,7 +42,10 @@ namespace Autokauppa.view
             cbPolttoaine.DisplayMember = "Name";
             cbPolttoaine.DataSource = registerHandler.GetFuelType();
 
-          //  CBKategoria.DataSource = registerHandler.GetCarDBColumns();
+            CBKategoria.ValueMember = "Id";
+            CBKategoria.DisplayMember = "Name";
+            CBKategoria.DataSource = registerHandler.GetCarDBColumns();
+
         }
 
  
@@ -242,10 +250,115 @@ namespace Autokauppa.view
 
         private void BtnHae_Click(object sender, EventArgs e)
         {
-            model.Haku haku = new model.Haku(CBKategoria.Text, TBHakusana.Text);
-            // Hae datatable perustuen haun parametreihin
 
+            model.Haku haku;
+            
+            if (tbSearch != null && tbSearch.Text != "")
+            {
+                haku = new model.Haku(CBKategoria.SelectedValue.ToString(), tbSearch.Text);
+                dataGrid.DataSource = registerHandler.UserSearch(haku);
+            }
+            if (cbSearch != null && cbSearch2 == null)
+            {
+                haku = new model.Haku(CBKategoria.SelectedValue.ToString(), cbSearch.SelectedValue.ToString());
+                dataGrid.DataSource = registerHandler.UserSearch(haku);
+            }
+            if (cbSearch != null && cbSearch2 != null)
+            {
+                haku = new model.Haku(CBKategoria.SelectedValue.ToString(), cbSearch2.SelectedValue.ToString());
+                dataGrid.DataSource = registerHandler.UserSearch(haku);
+            }
+            if (dtSearch != null)
+            {
+                haku = new model.Haku(CBKategoria.SelectedValue.ToString(), DateTime.Parse(dtSearch.Text).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture).ToString());
+                dataGrid.DataSource = registerHandler.UserSearch(haku);
+            }
+            //Hae datatable perustuen haun parametreihin
+            
             // Aseta datatable datagridviewille
         }
+
+        private void CBKategoria_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            flowLayoutPanel1.Controls.Clear();
+            tbSearch = null;
+            cbSearch = null;
+            cbSearch2 = null;
+            dtSearch = null;
+
+
+            if(CBKategoria.Text == "Hinta") 
+            {
+                flowLayoutPanel1.Controls.Add(tbSearch = new TextBox());
+                tbSearch.Width = 184;
+            } //Hae hinnan mukaan
+
+            if(CBKategoria.Text == "Moottorin tilavuus") 
+            {
+                flowLayoutPanel1.Controls.Add(tbSearch = new TextBox());
+                tbSearch.Width = 184;
+            }
+            if (CBKategoria.Text == "Rekisteröintipäivä")
+            {
+                flowLayoutPanel1.Controls.Add(dtSearch = new DateTimePicker()); 
+            }
+            if (CBKategoria.Text == "Mittarilukema") 
+            {
+                flowLayoutPanel1.Controls.Add(tbSearch = new TextBox());
+                tbSearch.Width = 184;
+
+            }
+            if (CBKategoria.Text == "Auton Merkki")
+            {
+                flowLayoutPanel1.Controls.Add(cbSearch = new ComboBox());
+                cbSearch.ValueMember = "Id";
+                cbSearch.DisplayMember = "Merkki";
+                cbSearch.DataSource = registerHandler.getAllAutoMakers();
+                cbSearch.Width = 92;
+            }
+            if (CBKategoria.Text == "Auton Malli") 
+            {
+                flowLayoutPanel1.Controls.Add(cbSearch = new ComboBox()); flowLayoutPanel1.Controls.Add(cbSearch2 = new ComboBox());
+                cbSearch.ValueMember = "Id";
+                cbSearch.DisplayMember = "Merkki";
+                cbSearch.DataSource = registerHandler.getAllAutoMakers();
+                cbSearch.SelectedIndexChanged += cbSearchIndexChange;
+
+                cbSearch.Width = 92; cbSearch2.Width = 92;
+
+            }
+            if (CBKategoria.Text == "Väri")
+            {
+                flowLayoutPanel1.Controls.Add(cbSearch = new ComboBox());
+                cbSearch.ValueMember = "Id";
+                cbSearch.DisplayMember = "Name";
+                cbSearch.DataSource = registerHandler.GetColors();
+                cbSearch.Width = 92;
+            }
+            if (CBKategoria.Text == "Polttoaine")
+            {
+                flowLayoutPanel1.Controls.Add(cbSearch = new ComboBox());
+                cbSearch.ValueMember = "Id";
+                cbSearch.DisplayMember = "Name";
+                cbSearch.DataSource = registerHandler.GetFuelType();
+                cbSearch.Width = 92;
+            }
+
+            
+        }
+        private void cbSearchIndexChange(object sender, EventArgs e)
+        {
+            if (cbSearch != null)
+            {
+                if (cbSearch.SelectedIndex != -1)
+                {
+                    cbSearch2.ValueMember = "Id";
+                    cbSearch2.DisplayMember = "Nimi";
+                    cbSearch2.DataSource = registerHandler.getAutoModels(int.Parse(cbSearch.SelectedValue.ToString()));
+                }
+            }
+    
+        }
+
     }
 }

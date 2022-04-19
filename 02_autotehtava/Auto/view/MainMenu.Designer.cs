@@ -57,25 +57,25 @@
             this.btnPoista = new System.Windows.Forms.Button();
             this.btnTallenna = new System.Windows.Forms.Button();
             this.btnPeruuta = new System.Windows.Forms.Button();
-            this.TBHakusana = new System.Windows.Forms.TextBox();
             this.CBKategoria = new System.Windows.Forms.ComboBox();
             this.BtnHae = new System.Windows.Forms.Button();
             this.GBHaku = new System.Windows.Forms.GroupBox();
-            this.DataGrid = new System.Windows.Forms.DataGridView();
+            this.dataGrid = new System.Windows.Forms.DataGridView();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.gbAuto.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.GBHaku.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSeuraava
             // 
-            this.btnSeuraava.Location = new System.Drawing.Point(83, 187);
+            this.btnSeuraava.Location = new System.Drawing.Point(53, 187);
             this.btnSeuraava.Margin = new System.Windows.Forms.Padding(2);
             this.btnSeuraava.Name = "btnSeuraava";
-            this.btnSeuraava.Size = new System.Drawing.Size(70, 27);
+            this.btnSeuraava.Size = new System.Drawing.Size(40, 27);
             this.btnSeuraava.TabIndex = 35;
-            this.btnSeuraava.Text = "Seuraava";
+            this.btnSeuraava.Text = ">";
             this.btnSeuraava.UseVisualStyleBackColor = true;
             this.btnSeuraava.Click += new System.EventHandler(this.btnSeuraava_Click);
             // 
@@ -280,9 +280,9 @@
             this.btnEdellinen.Location = new System.Drawing.Point(9, 187);
             this.btnEdellinen.Margin = new System.Windows.Forms.Padding(2);
             this.btnEdellinen.Name = "btnEdellinen";
-            this.btnEdellinen.Size = new System.Drawing.Size(70, 27);
+            this.btnEdellinen.Size = new System.Drawing.Size(40, 27);
             this.btnEdellinen.TabIndex = 34;
-            this.btnEdellinen.Text = "Edellinen";
+            this.btnEdellinen.Text = "<";
             this.btnEdellinen.UseVisualStyleBackColor = true;
             this.btnEdellinen.Click += new System.EventHandler(this.btnEdellinen_Click);
             // 
@@ -375,20 +375,14 @@
             this.btnPeruuta.UseVisualStyleBackColor = false;
             this.btnPeruuta.Click += new System.EventHandler(this.btnPeruuta_Click);
             // 
-            // TBHakusana
-            // 
-            this.TBHakusana.Location = new System.Drawing.Point(230, 187);
-            this.TBHakusana.Name = "TBHakusana";
-            this.TBHakusana.Size = new System.Drawing.Size(203, 20);
-            this.TBHakusana.TabIndex = 36;
-            // 
             // CBKategoria
             // 
             this.CBKategoria.FormattingEnabled = true;
-            this.CBKategoria.Location = new System.Drawing.Point(158, 187);
+            this.CBKategoria.Location = new System.Drawing.Point(98, 187);
             this.CBKategoria.Name = "CBKategoria";
-            this.CBKategoria.Size = new System.Drawing.Size(66, 21);
+            this.CBKategoria.Size = new System.Drawing.Size(115, 21);
             this.CBKategoria.TabIndex = 37;
+            this.CBKategoria.SelectedIndexChanged += new System.EventHandler(this.CBKategoria_SelectedIndexChanged);
             // 
             // BtnHae
             // 
@@ -402,7 +396,7 @@
             // 
             // GBHaku
             // 
-            this.GBHaku.Controls.Add(this.DataGrid);
+            this.GBHaku.Controls.Add(this.dataGrid);
             this.GBHaku.Location = new System.Drawing.Point(9, 220);
             this.GBHaku.Name = "GBHaku";
             this.GBHaku.Size = new System.Drawing.Size(500, 296);
@@ -410,23 +404,30 @@
             this.GBHaku.TabStop = false;
             this.GBHaku.Text = "Haun tulokset";
             // 
-            // DataGrid
+            // dataGrid
             // 
-            this.DataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGrid.Location = new System.Drawing.Point(4, 20);
-            this.DataGrid.Name = "DataGrid";
-            this.DataGrid.Size = new System.Drawing.Size(490, 270);
-            this.DataGrid.TabIndex = 0;
+            this.dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid.Location = new System.Drawing.Point(4, 20);
+            this.dataGrid.Name = "dataGrid";
+            this.dataGrid.Size = new System.Drawing.Size(490, 270);
+            this.dataGrid.TabIndex = 0;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(221, 187);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(214, 21);
+            this.flowLayoutPanel1.TabIndex = 40;
             // 
             // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(525, 528);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.GBHaku);
             this.Controls.Add(this.BtnHae);
             this.Controls.Add(this.CBKategoria);
-            this.Controls.Add(this.TBHakusana);
             this.Controls.Add(this.btnPeruuta);
             this.Controls.Add(this.btnTallenna);
             this.Controls.Add(this.btnPoista);
@@ -443,7 +444,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.GBHaku.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -479,10 +480,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnPeruuta;
-        private System.Windows.Forms.TextBox TBHakusana;
         private System.Windows.Forms.ComboBox CBKategoria;
         private System.Windows.Forms.Button BtnHae;
         private System.Windows.Forms.GroupBox GBHaku;
-        private System.Windows.Forms.DataGridView DataGrid;
+        private System.Windows.Forms.DataGridView dataGrid;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
