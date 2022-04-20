@@ -181,7 +181,6 @@ namespace Autokauppa.model
                     carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID DESC");
                 }
             }
-
             else if (getPrevious == false) 
             {
                 var highestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID DESC").Rows);
@@ -192,22 +191,42 @@ namespace Autokauppa.model
                     carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID ASC");
                 }
             }
-
-            // Creating a car from DataRow
-            foreach (DataRow r in carDataTable.Rows)
-            {
-                newCar.Id = int.Parse(r["ID"].ToString());
-                newCar.Price = float.Parse(r["Hinta"].ToString());
-                newCar.RegistryDate = DateTime.Parse(r["Rekisteri_paivamaara"].ToString());
-                newCar.EngineVolume = float.Parse(r["Moottorin_tilavuus"].ToString());
-                newCar.Meter = int.Parse(r["Mittarilukema"].ToString());
-                newCar.CarBrandId = int.Parse(r["AutonMerkkiID"].ToString());
-                newCar.CarModelId = int.Parse(r["AutonMalliID"].ToString());
-                newCar.ColorId = int.Parse(r["VaritID"].ToString());
-                newCar.FuelTypeId = int.Parse(r["PolttoaineID"].ToString());
-            }
+            newCar = CreateCarFromDataRowCollection(carDataTable.Rows);
          
             return newCar;
+        }
+
+        public Auto MGetCarByID(int Id)
+        {
+            var carDataTable = GetDataTable($"SELECT * FROM [dbo].[auto] WHERE ID = {Id}");
+            Auto newCar = CreateCarFromDataRowCollection(carDataTable.Rows);
+            return newCar;
+        }
+
+        /// <summary>
+        /// Returns a car object of the last row in DataRowCollection. Usually used when collection has only one row. 
+        /// </summary>
+        /// <param name="RowCollection"></param>
+        /// <returns></returns>
+        private Auto CreateCarFromDataRowCollection(DataRowCollection RowCollection)
+        {
+            Auto c = new Auto();
+            var rc = RowCollection;
+
+            // Creating a car from DataRow
+            foreach (DataRow r in rc)
+            {
+                c.Id = int.Parse(r["ID"].ToString());
+                c.Price = float.Parse(r["Hinta"].ToString());
+                c.RegistryDate = DateTime.Parse(r["Rekisteri_paivamaara"].ToString());
+                c.EngineVolume = float.Parse(r["Moottorin_tilavuus"].ToString());
+                c.Meter = int.Parse(r["Mittarilukema"].ToString());
+                c.CarBrandId = int.Parse(r["AutonMerkkiID"].ToString());
+                c.CarModelId = int.Parse(r["AutonMalliID"].ToString());
+                c.ColorId = int.Parse(r["VaritID"].ToString());
+                c.FuelTypeId = int.Parse(r["PolttoaineID"].ToString());
+            }
+            return c;
         }
 
         private int GetCarIDFromRow(DataRowCollection row)
@@ -215,6 +234,11 @@ namespace Autokauppa.model
             return int.Parse(row[0]["ID"].ToString());
         }
 
+        /// <summary>
+        /// Returns a datatable of users search result.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
         public DataTable MUserSearch(Haku search)
         {
             DataTable dt = new DataTable();
@@ -238,6 +262,10 @@ namespace Autokauppa.model
             return dt;
         }
 
+        /// <summary>
+        /// Gets a list of auto (car) table's columns and also gives them a cleaner looking name for user.
+        /// </summary>
+        /// <returns></returns>
         public List<HakuKategoria> MGetCarDBColumns()
         {
             var r = GetDataTable("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'auto' ORDER BY ORDINAL_POSITION").Rows;

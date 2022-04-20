@@ -58,11 +58,20 @@ namespace Autokauppa.controller
             return dbModel.MGetNextCar(currentId, getPrevious);
         }
 
+        public Auto GetCarByID(int Id)
+        {
+            return dbModel.MGetCarByID(Id);
+        }
+
         public DataTable UserSearch(Haku search)
         {
             return dbModel.MUserSearch(search);
         }
 
+        /// <summary>
+        /// Gets a list of auto (car) table's columns and also gives them a cleaner looking name for user.
+        /// </summary>
+        /// <returns></returns>
         public List<HakuKategoria> GetCarDBColumns()
         {
             return (dbModel.MGetCarDBColumns());

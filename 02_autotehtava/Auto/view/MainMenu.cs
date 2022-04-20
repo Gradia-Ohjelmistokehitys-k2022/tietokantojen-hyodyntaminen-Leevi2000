@@ -251,7 +251,6 @@ namespace Autokauppa.view
 
         private void BtnHae_Click(object sender, EventArgs e)
         {
-
             model.Haku haku;
             
             if (tbSearch != null && tbSearch.Text != "")
@@ -274,9 +273,6 @@ namespace Autokauppa.view
                 haku = new model.Haku(CBKategoria.SelectedValue.ToString(), DateTime.Parse(dtSearch.Text).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture).ToString());
                 dataGrid.DataSource = registerHandler.UserSearch(haku);
             }
-            //Hae datatable perustuen haun parametreihin
-            
-            // Aseta datatable datagridviewille
         }
 
         private void CBKategoria_SelectedIndexChanged(object sender, EventArgs e)
@@ -361,5 +357,14 @@ namespace Autokauppa.view
     
         }
 
+        private void dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+           // dataGrid.CurrentCell.RowIndex.ToString();
+            DataGridViewRow r = dataGrid.Rows[e.RowIndex];
+            var carID = int.Parse(r.Cells[0].Value.ToString());
+
+            var car = registerHandler.GetCarByID(carID);
+            WriteCarInfo(car);
+        }
     }
 }

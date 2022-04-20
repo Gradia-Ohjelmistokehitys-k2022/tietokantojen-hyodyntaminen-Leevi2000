@@ -8,6 +8,31 @@ namespace Autokauppa.model
 {
     public class Auto
     {
+        private int _Id;
+        private float _Price;
+        private DateTime _RegistryDate;
+        private float _EngineVolume;
+        private int _Meter;
+        private int _CarBrandId;
+        private int _CarModelId;
+        private int _ColorId;
+        private int _FuelTypeId;
+        public Auto(int Id, float Price, DateTime RegistryDate, float EngineVolume, int Meter, int CarBrandId, int CarModelId, int ColorId, int FuelTypeId)
+        {
+            _Id = Id;
+            _Price = Price;
+            _RegistryDate = RegistryDate;
+            _EngineVolume = EngineVolume;
+            _Meter = Meter;
+            _CarBrandId = CarBrandId;
+            _CarModelId = CarModelId;
+            _ColorId = ColorId;
+            _FuelTypeId = FuelTypeId;
+        }
+        public Auto()
+        {
+
+        }
         public int Id { get; set; }
         public float Price { get; set; }
         public DateTime RegistryDate { get; set; }
