@@ -46,6 +46,7 @@ namespace Autokauppa.view
             CBKategoria.DisplayMember = "Name";
             CBKategoria.DataSource = registerHandler.GetCarDBColumns();
 
+            registerHandler.TestDatabaseConnection();
         }
 
  

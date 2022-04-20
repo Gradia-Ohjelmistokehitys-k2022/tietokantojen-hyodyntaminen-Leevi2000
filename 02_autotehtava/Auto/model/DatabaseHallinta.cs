@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Globalization;
 
+
 namespace Autokauppa.model
 {
     public class DatabaseHallinta
@@ -67,15 +68,12 @@ namespace Autokauppa.model
                 $" {c.CarModelId}, {c.ColorId}, {c.FuelTypeId})" +
                 $" WHERE ID = {c.Id}");
             }
-            
 
-            connectDatabase();
             SqlCommand sqlcmd = new SqlCommand(cmd, dbYhteys);
             sqlcmd.Parameters.AddWithValue("@EngineVolume", c.EngineVolume);
             sqlcmd.Parameters.AddWithValue("@Price", c.Price);
             sqlcmd.ExecuteNonQuery();
             bool success = true;
-            disconnectDatabase();
             return success;
         }
 
@@ -101,7 +99,6 @@ namespace Autokauppa.model
                 }
                 palaute.Add(merkki);
             }
-            disconnectDatabase();
             return palaute;
         }
 
@@ -122,11 +119,9 @@ namespace Autokauppa.model
 
         private DataTable GetDataTable(string cmd)
         {
-            connectDatabase();
             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd, dbYhteys);
             DataTable dataTable = new DataTable();
             dataAdapter.Fill(dataTable);
-            disconnectDatabase();
             return dataTable;
         }
 
@@ -223,28 +218,23 @@ namespace Autokauppa.model
         public DataTable MUserSearch(Haku search)
         {
             DataTable dt = new DataTable();
-            string cmd;
 
             if (search.HakuSana != null && search.HakuKategoria != null)
             {
-                // SQLCommand with Category and word
-                cmd = $"SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, e.Varin_nimi AS Väri FROM [dbo].[auto] a " +
-                    $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID AND " +
+                // Temp db is used to reduce performance issues. 
+                ExecuteCommand($"SELECT * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} LIKE {search.HakuSana}");
+
+                dt = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
+                    "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
+                    "c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, " +
+                    "e.Varin_nimi AS Väri FROM #SearchTemp a " +
+                    $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID " +
                     $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
                     $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
-                    $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID " +
-                    $"WHERE {search.HakuKategoria} LIKE {search.HakuSana}";
-                dt = GetDataTable(cmd);
-            }
-            else if (search.HakuKategoria != null)
-            {
-                // SQLCommand with Category
-            }
-            else if (search.HakuSana != null)
-            {
-                // SQLCommand with word
-            }
+                    $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
 
+                ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
+            }
             return dt;
         }
 
@@ -252,8 +242,6 @@ namespace Autokauppa.model
         {
             var r = GetDataTable("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'auto' ORDER BY ORDINAL_POSITION").Rows;
             List<HakuKategoria> list = new List<HakuKategoria>();
-
-           
 
             list.Add(new HakuKategoria(r[1]["COLUMN_NAME"].ToString(), "Hinta"));
             list.Add(new HakuKategoria(r[2]["COLUMN_NAME"].ToString(), "Rekisteröintipäivä"));
@@ -264,11 +252,13 @@ namespace Autokauppa.model
             list.Add(new HakuKategoria(r[7]["COLUMN_NAME"].ToString(), "Väri"));
             list.Add(new HakuKategoria(r[8]["COLUMN_NAME"].ToString(), "Polttoaine"));
 
-
-
-
-
             return list;
+        }
+
+        public void ExecuteCommand(string cmd)
+        {
+            SqlCommand command = new SqlCommand(cmd, dbYhteys);
+            command.ExecuteNonQuery();
         }
     }
 }
