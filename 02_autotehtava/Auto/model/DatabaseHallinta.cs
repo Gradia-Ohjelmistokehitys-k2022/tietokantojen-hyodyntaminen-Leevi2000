@@ -242,11 +242,27 @@ namespace Autokauppa.model
         public DataTable MUserSearch(Haku search)
         {
             DataTable dt = new DataTable();
-
+            disconnectDatabase();
+            connectDatabase();
+            //ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
+            ExecuteCommand($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
             if (search.HakuSana != null && search.HakuKategoria != null)
             {
+            
+                if (search.HakuKategoria == "Hinta")
+                {
+                    ExecuteCommand($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-1000) AND ({search.HakuSana}+2000)");
+                }
+                else if (search.HakuKategoria == "Mittarilukema")
+                {
+                    ExecuteCommand($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-10000) AND ({search.HakuSana}+10000)");
+                }
+                else
+                {
+                    ExecuteCommand($"SELECT * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} LIKE {search.HakuSana}");
+                }
                 // Temp db is used to reduce performance issues. 
-                ExecuteCommand($"SELECT * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} LIKE {search.HakuSana}");
+                
 
                 dt = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
                     "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
@@ -256,9 +272,8 @@ namespace Autokauppa.model
                     $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
                     $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
                     $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
-
-                ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
             }
+            ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
             return dt;
         }
 

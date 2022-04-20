@@ -22,6 +22,7 @@ namespace Autokauppa.view
 
         private bool editing = false;
         TextBox tbSearch;
+        TextBox tbSearch2;
         DateTimePicker dtSearch;
         ComboBox cbSearch;
         ComboBox cbSearch2;
@@ -273,6 +274,10 @@ namespace Autokauppa.view
                 haku = new model.Haku(CBKategoria.SelectedValue.ToString(), DateTime.Parse(dtSearch.Text).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture).ToString());
                 dataGrid.DataSource = registerHandler.UserSearch(haku);
             }
+            if (tbSearch != null && tbSearch2 != null )
+            {
+
+            }
         }
 
         private void CBKategoria_SelectedIndexChanged(object sender, EventArgs e)
@@ -282,13 +287,14 @@ namespace Autokauppa.view
             cbSearch = null;
             cbSearch2 = null;
             dtSearch = null;
+            tbSearch2 = null;
 
 
             if(CBKategoria.Text == "Hinta") 
             {
                 flowLayoutPanel1.Controls.Add(tbSearch = new TextBox());
                 tbSearch.Width = 184;
-            } //Hae hinnan mukaan
+            } 
 
             if(CBKategoria.Text == "Moottorin tilavuus") 
             {
@@ -303,7 +309,6 @@ namespace Autokauppa.view
             {
                 flowLayoutPanel1.Controls.Add(tbSearch = new TextBox());
                 tbSearch.Width = 184;
-
             }
             if (CBKategoria.Text == "Auton Merkki")
             {
@@ -360,11 +365,19 @@ namespace Autokauppa.view
         private void dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
            // dataGrid.CurrentCell.RowIndex.ToString();
-            DataGridViewRow r = dataGrid.Rows[e.RowIndex];
-            var carID = int.Parse(r.Cells[0].Value.ToString());
+           try
+            {
+                DataGridViewRow r = dataGrid.Rows[e.RowIndex];
+                var carID = int.Parse(r.Cells[0].Value.ToString());
 
-            var car = registerHandler.GetCarByID(carID);
-            WriteCarInfo(car);
+                var car = registerHandler.GetCarByID(carID);
+                WriteCarInfo(car);
+            }
+            catch
+            {
+
+            }
+            
         }
     }
 }
