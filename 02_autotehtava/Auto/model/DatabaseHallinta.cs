@@ -234,20 +234,42 @@ namespace Autokauppa.model
     {
         return int.Parse(row[0]["ID"].ToString());
     }
-    public DataTable MUserSearch(Haku search)
-    {
-        DataTable dataTable = new DataTable();
-        ExecuteCommandString("IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
-        if (search.HakuSana != null && search.HakuKategoria != null)
+
+
+        /// <summary>
+        /// Returns a datatable of users search result.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public DataTable MUserSearch(Haku search)
         {
-            if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
-                ExecuteCommandString("WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " > " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " ASC) UNION ALL (SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " <= " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " DESC)) SELECT TOP 100 * INTO #SearchTemp FROM CTE ORDER BY ABS(" + search.HakuKategoria + " - " + search.HakuSana + ") ASC");
-            else
-                ExecuteCommandString("SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE " + search.HakuKategoria + " LIKE " + search.HakuSana.Replace(",", ".") + " ORDER BY a.Hinta ASC");
-            dataTable = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, e.Varin_nimi AS Väri FROM #SearchTemp a LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
+            DataTable dt = new DataTable();
+
+            ExecuteCommandString($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
+            if (search.HakuSana != null && search.HakuKategoria != null)
+            {
+                if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
+                {
+                    ExecuteCommandString("WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " > " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " ASC) UNION ALL (SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " <= " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " DESC)) SELECT TOP 100 * INTO #SearchTemp FROM CTE ORDER BY ABS(" + search.HakuKategoria + " - " + search.HakuSana + ") ASC");
+                }
+                else
+                {
+                    ExecuteCommandString($"SELECT TOP 175 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",", ".")} ORDER BY a.Hinta ASC");
+                }
+
+                // Temp db is used to reduce performance issues. 
+                dt = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
+                    "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
+                    "c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, " +
+                    "e.Varin_nimi AS Väri FROM #SearchTemp a " +
+                    $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID " +
+                    $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
+                    $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
+                    $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
+            }
+
+            return dt;
         }
-        return dataTable;
-    }
 
         public DataTable MUserSeachNext(Haku search, bool previous = false)
         {
