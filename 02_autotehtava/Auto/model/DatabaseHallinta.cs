@@ -249,12 +249,14 @@ namespace Autokauppa.model
 
                 if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
                 {
-                    ExecuteCommandString($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-1000) AND ({search.HakuSana}+2000)");
-                    ExecuteCommandString($"WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE {search.HakuKategoria} > {search.HakuSana} " +
-                        $"ORDER BY {search.HakuKategoria} ASC) UNION ALL (SELECT TOP 125 FROM [dbo].[auto] " +
-                        $"WHERE {search.HakuKategoria} <= {search.HakuSana} ORDER BY {search.HakuKategoria} DESC)) SELECT TOP 175 * INTO #SearchTemp FROM CTE " +
-                        $"ORDER BY ABS({search.HakuKategoria}-{search.HakuSana}) ASC");
-        
+                    //ExecuteCommandString($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-1000) AND ({search.HakuSana}+2000)");
+                    //ExecuteCommandString($"WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE {search.HakuKategoria} > {search.HakuSana} " +
+                    //    $"ORDER BY {search.HakuKategoria} ASC) UNION ALL (SELECT TOP 125 FROM [dbo].[auto] " +
+                    //    $"WHERE {search.HakuKategoria} <= {search.HakuSana} ORDER BY {search.HakuKategoria} DESC)) SELECT TOP 175 * INTO #SearchTemp FROM CTE " +
+                    //    $"ORDER BY ABS({search.HakuKategoria}-{search.HakuSana}) ASC");
+                    this.ExecuteCommandString("WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " > " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " ASC) UNION ALL (SELECT TOP 125 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " <= " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " DESC)) SELECT TOP 175 * INTO #SearchTemp FROM CTE ORDER BY ABS(" + search.HakuKategoria + " - " + search.HakuSana + ") ASC");
+
+
                 }
                 else
                 {
@@ -296,7 +298,7 @@ namespace Autokauppa.model
                 
                 if (!previous)
                 {
-                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {search.HakuSana} ORDER BY {search.HakuKategoria} ASC");
+                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {highestValue} ORDER BY {search.HakuKategoria} ASC");
                 }
 
                 dataTable = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
