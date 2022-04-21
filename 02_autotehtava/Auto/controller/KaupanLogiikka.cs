@@ -76,5 +76,9 @@ namespace Autokauppa.controller
         {
             return (dbModel.MGetCarDBColumns());
         }
+        public DataTable UserSeachNext(Haku search, bool previous = false)
+        {
+            return dbModel.MUserSeachNext(search, previous);
+        }
     }
 }

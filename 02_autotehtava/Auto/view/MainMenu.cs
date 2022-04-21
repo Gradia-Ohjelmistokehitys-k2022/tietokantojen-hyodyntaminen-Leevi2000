@@ -27,6 +27,8 @@ namespace Autokauppa.view
         ComboBox cbSearch;
         ComboBox cbSearch2;
 
+        model.Haku haku;
+
         public MainMenu()
         {
             registerHandler = new KaupanLogiikka();
@@ -252,7 +254,7 @@ namespace Autokauppa.view
 
         private void BtnHae_Click(object sender, EventArgs e)
         {
-            model.Haku haku;
+            
             
             if (tbSearch != null && tbSearch.Text != "")
             {
@@ -378,6 +380,11 @@ namespace Autokauppa.view
 
             }
             
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            dataGrid.DataSource = registerHandler.UserSeachNext(haku);
         }
     }
 }

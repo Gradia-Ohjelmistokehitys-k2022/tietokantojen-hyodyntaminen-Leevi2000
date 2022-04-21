@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,18 +26,18 @@ namespace Autokauppa.model
         public bool connectDatabase()
         {
             try
-            { 
+            {
                 dbYhteys.Open();
 
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 dbYhteys.Close();
                 Console.WriteLine("Virheilmoitukset:" + e);
                 return false;
             }
-            
+
         }
 
         public void disconnectDatabase()
@@ -83,12 +83,12 @@ namespace Autokauppa.model
 
             var dataTable = GetDataTable("SELECT * FROM [dbo].[AutonMerkki]");
 
-            foreach(DataRow row in dataTable.Rows)
+            foreach (DataRow row in dataTable.Rows)
             {
                 AutonMerkki merkki = new AutonMerkki();
-                foreach(DataColumn column in dataTable.Columns)
+                foreach (DataColumn column in dataTable.Columns)
                 {
-                    if(column.ToString() == "ID")
+                    if (column.ToString() == "ID")
                     {
                         merkki.Id = int.Parse(row[column].ToString());
                     }
@@ -102,7 +102,7 @@ namespace Autokauppa.model
             return palaute;
         }
 
-        public List<AutonMalli> getAutoModelsByMakerId(int makerId)   
+        public List<AutonMalli> getAutoModelsByMakerId(int makerId)
         {
             var dataTable = GetDataTable($"SELECT * FROM [dbo].[AutonMallit] WHERE AutonMerkkiID = {makerId}");
             List<AutonMalli> palaute = new List<AutonMalli>();
@@ -129,7 +129,7 @@ namespace Autokauppa.model
         {
             var dataTable = GetDataTable($"SELECT * FROM [dbo].[Polttoaine]");
             List<Polttoaine> fuelTypes = new List<Polttoaine>();
-            foreach(DataRow row in dataTable.Rows)
+            foreach (DataRow row in dataTable.Rows)
             {
                 Polttoaine fuel = new Polttoaine();
                 fuel.Id = int.Parse(row["ID"].ToString());
@@ -171,17 +171,17 @@ namespace Autokauppa.model
 
             if (currentId == 0) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC"); }
 
-            else if (getPrevious == true) 
+            else if (getPrevious == true)
             {
                 var lowestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID ASC").Rows);
 
-                if (currentId > lowestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID DESC "); } 
+                if (currentId > lowestId) { carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID < {currentId} ORDER BY ID DESC "); }
                 else
                 {
                     carDataTable = GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] WHERE ID > {currentId} ORDER BY ID DESC");
                 }
             }
-            else if (getPrevious == false) 
+            else if (getPrevious == false)
             {
                 var highestId = GetCarIDFromRow(GetDataTable($"SELECT TOP(1)* FROM [dbo].[auto] ORDER BY ID DESC").Rows);
 
@@ -192,7 +192,7 @@ namespace Autokauppa.model
                 }
             }
             newCar = CreateCarFromDataRowCollection(carDataTable.Rows);
-         
+
             return newCar;
         }
 
@@ -242,39 +242,53 @@ namespace Autokauppa.model
         public DataTable MUserSearch(Haku search)
         {
             DataTable dt = new DataTable();
-            disconnectDatabase();
-            connectDatabase();
-            //ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
-            ExecuteCommand($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
+
+            ExecuteCommandString($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
             if (search.HakuSana != null && search.HakuKategoria != null)
             {
-            
-                if (search.HakuKategoria == "Hinta")
+
+                if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
                 {
-                    ExecuteCommand($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-1000) AND ({search.HakuSana}+2000)");
-                }
-                else if (search.HakuKategoria == "Mittarilukema")
-                {
-                    ExecuteCommand($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-10000) AND ({search.HakuSana}+10000)");
+                    ExecuteCommandString($"SELECT TOP 250 * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} BETWEEN ({search.HakuSana}-1000) AND ({search.HakuSana}+2000)");
+                    ExecuteCommandString($"WITH CTE AS ((SELECT TOP 125 * FROM [dbo].[auto] WHERE {search.HakuKategoria} > {search.HakuSana} " +
+                        $"ORDER BY {search.HakuKategoria} ASC) UNION ALL (SELECT TOP 125 FROM [dbo].[auto] " +
+                        $"WHERE {search.HakuKategoria} <= {search.HakuSana} ORDER BY {search.HakuKategoria} DESC)) SELECT TOP 175 * INTO #SearchTemp FROM CTE " +
+                        $"ORDER BY ABS({search.HakuKategoria}-{search.HakuSana}) ASC");
+        
                 }
                 else
                 {
-                    ExecuteCommand($"SELECT * INTO #SearchTemp FROM [dbo].[auto] WHERE {search.HakuKategoria} LIKE {search.HakuSana}");
+                    ExecuteCommandString($"SELECT TOP 175 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",",".")} ORDER BY a.Hinta ASC");
                 }
-                // Temp db is used to reduce performance issues. 
-                
 
-                dt = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS RekisterÃ¶intipÃ¤ivÃ¤, " +
+                // Temp db is used to reduce performance issues. 
+                dt = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
                     "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
                     "c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, " +
-                    "e.Varin_nimi AS VÃ¤ri FROM #SearchTemp a " +
+                    "e.Varin_nimi AS Väri FROM #SearchTemp a " +
                     $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID " +
                     $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
                     $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
                     $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
             }
-            ExecuteCommand($"DROP TABLE IF EXISTS #SearchTemp");
+
             return dt;
+        }
+
+        public DataTable MUserSeachNext(Haku search, bool previous = false)
+        {
+            DataTable dataTable = new DataTable();
+            if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
+            {
+                DataRowCollection rows = this.GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " DESC").Rows;
+                this.ExecuteCommandString("IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
+                Auto dataRowCollection = this.CreateCarFromDataRowCollection(rows);
+                float num = !(search.HakuKategoria == "Hinta") ? (float)dataRowCollection.Meter : dataRowCollection.Price;
+                if (!previous)
+                    this.ExecuteCommandString(string.Format("SELECT TOP 175 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {0} > {1} ORDER BY {2} ASC", (object)search.HakuKategoria, (object)num, (object)search.HakuKategoria));
+                dataTable = this.GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, e.Varin_nimi AS Väri FROM #SearchTemp a LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
+            }
+            return dataTable;
         }
 
         /// <summary>
@@ -287,18 +301,18 @@ namespace Autokauppa.model
             List<HakuKategoria> list = new List<HakuKategoria>();
 
             list.Add(new HakuKategoria(r[1]["COLUMN_NAME"].ToString(), "Hinta"));
-            list.Add(new HakuKategoria(r[2]["COLUMN_NAME"].ToString(), "RekisterÃ¶intipÃ¤ivÃ¤"));
+            list.Add(new HakuKategoria(r[2]["COLUMN_NAME"].ToString(), "Rekisteröintipäivä"));
             list.Add(new HakuKategoria(r[3]["COLUMN_NAME"].ToString(), "Moottorin tilavuus"));
             list.Add(new HakuKategoria(r[4]["COLUMN_NAME"].ToString(), "Mittarilukema"));
             list.Add(new HakuKategoria(r[5]["COLUMN_NAME"].ToString(), "Auton Merkki"));
             list.Add(new HakuKategoria(r[6]["COLUMN_NAME"].ToString(), "Auton Malli"));
-            list.Add(new HakuKategoria(r[7]["COLUMN_NAME"].ToString(), "VÃ¤ri"));
+            list.Add(new HakuKategoria(r[7]["COLUMN_NAME"].ToString(), "Väri"));
             list.Add(new HakuKategoria(r[8]["COLUMN_NAME"].ToString(), "Polttoaine"));
 
             return list;
         }
 
-        public void ExecuteCommand(string cmd)
+        public void ExecuteCommandString(string cmd)
         {
             SqlCommand command = new SqlCommand(cmd, dbYhteys);
             command.ExecuteNonQuery();
