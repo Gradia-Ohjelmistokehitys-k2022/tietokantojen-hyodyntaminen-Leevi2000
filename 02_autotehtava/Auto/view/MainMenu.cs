@@ -386,5 +386,10 @@ namespace Autokauppa.view
         {
             dataGrid.DataSource = registerHandler.UserSeachNext(haku);
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dataGrid.DataSource = registerHandler.UserSeachNext(haku, true);
+        }
     }
 }

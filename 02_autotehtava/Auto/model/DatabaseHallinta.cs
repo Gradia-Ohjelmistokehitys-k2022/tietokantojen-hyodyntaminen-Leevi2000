@@ -254,7 +254,7 @@ namespace Autokauppa.model
                 }
                 else
                 {
-                    ExecuteCommandString($"SELECT TOP 175 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",", ".")} ORDER BY a.Hinta ASC");
+                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",", ".")} ORDER BY a.Hinta ASC");
                 }
 
                 // Temp db is used to reduce performance issues. 
@@ -274,37 +274,54 @@ namespace Autokauppa.model
         public DataTable MUserSeachNext(Haku search, bool previous = false)
         {
             DataTable dataTable = new DataTable();
-            if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
+      
+            DataRowCollection rs;
+            if (!previous)
             {
-                var rs = this.GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " DESC").Rows;
-                float highestValue;
-                var c = CreateCarFromDataRowCollection(rs);
-                if (search.HakuKategoria == "Hinta")
+                rs = GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " DESC").Rows;
+            }
+            else
+            {
+                rs = GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " ASC").Rows;
+            }
+            //rs = this.GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " DESC").Rows;
+            float searchValue;
+            var c = CreateCarFromDataRowCollection(rs);
+            if (search.HakuKategoria == "Mittarilukema")
+                searchValue = c.Meter;
+            else
+                searchValue = c.Price;
+
+
+            ExecuteCommandString("IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
+
+            
+            if (!previous)
+            {
+
+                ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} ASC");
+            }
+            else
+            {
+                if (searchValue == 0)
                 {
-                    highestValue = c.Price;
+                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} DESC");
                 }
                 else
-                {
-                    highestValue = c.Meter;
-                }
-                ExecuteCommandString("IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
-
-
-                if (!previous)
-                {
-                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {highestValue} ORDER BY {search.HakuKategoria} ASC");
-                }
-
-                dataTable = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
-                    "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
-                    "c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, " +
-                    "e.Varin_nimi AS Väri FROM #SearchTemp a " +
-                    $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID " +
-                    $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
-                    $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
-                    $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
-
+                    ExecuteCommandString($"SELECT TOP 100 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} < {searchValue} ORDER BY {search.HakuKategoria} DESC");
             }
+            
+
+            dataTable = GetDataTable("SELECT a.ID, a.Hinta, a.Rekisteri_paivamaara AS Rekisteröintipäivä, " +
+               "a.Moottorin_tilavuus AS 'Moottorin Tilavuus', a.Mittarilukema, b.Merkki, " +
+               "c.Auton_mallin_nimi AS Malli, d.Polttoaineen_nimi AS Polttoainetyyppi, " +
+               "e.Varin_nimi AS Väri FROM #SearchTemp a " +
+               $"LEFT JOIN [dbo].[AutonMerkki] b ON a.AutonMerkkiID = b.ID " +
+               $"LEFT JOIN [dbo].[AutonMallit] c ON a.AutonMalliID = c.ID " +
+               $"LEFT JOIN [dbo].[Polttoaine] d ON a.PolttoaineID = d.ID " +
+               $"LEFT JOIN [dbo].[Varit] e ON a.VaritID = e.ID");
+
+
             return dataTable;
         }
 
