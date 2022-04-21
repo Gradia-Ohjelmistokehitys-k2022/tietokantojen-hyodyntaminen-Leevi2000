@@ -62,7 +62,6 @@ namespace Autokauppa.view
         {
             EditMode();
             ClearText();
-
         }
 
         private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -132,6 +131,8 @@ namespace Autokauppa.view
             var newCar = CarInfo();
             EditMode(false);
             registerHandler.SaveCar(newCar);
+
+            if(tbId.Text == "") WriteCarInfo(registerHandler.GetNewestCar()); // Refreshing id textbox
         }
 
         /// <summary>
@@ -147,6 +148,7 @@ namespace Autokauppa.view
                 btnPeruuta.Enabled = true;
                 btnSeuraava.Enabled = false;
                 btnEdellinen.Enabled = false;
+                btnLisaa.Enabled = false;
                 btnPoista.Enabled = false;
                 dtpPaiva.Enabled = true;
                 tempCar = CarInfo();
@@ -159,6 +161,7 @@ namespace Autokauppa.view
                 btnEdellinen.Enabled = true;
                 btnPoista.Enabled = true;
                 dtpPaiva.Enabled = false;
+                btnLisaa.Enabled = true;
                 editing = false;
             }
         }
@@ -284,7 +287,12 @@ namespace Autokauppa.view
             }
         }
 
-     
+     /// <summary>
+     /// Handles the search items
+     /// .
+     /// </summary>
+     /// <param name="sender"></param>
+     /// <param name="e"></param>
         private void CBKategoria_SelectedIndexChanged(object sender, EventArgs e)
         {
             flowLayoutPanel1.Controls.Clear();
@@ -353,6 +361,8 @@ namespace Autokauppa.view
 
             
         }
+
+
         private void cbSearchIndexChange(object sender, EventArgs e)
         {
             if (cbSearch != null)
@@ -364,9 +374,13 @@ namespace Autokauppa.view
                     cbSearch2.DataSource = registerHandler.getAutoModels(int.Parse(cbSearch.SelectedValue.ToString()));
                 }
             }
-    
         }
 
+        /// <summary>
+        /// Display car properties from datagridview to main view. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
            // dataGrid.CurrentCell.RowIndex.ToString();
@@ -376,6 +390,7 @@ namespace Autokauppa.view
                 var carID = int.Parse(r.Cells[0].Value.ToString());
 
                 var car = registerHandler.GetCarByID(carID);
+                EditMode(false);
                 WriteCarInfo(car);
             }
             catch
@@ -385,14 +400,36 @@ namespace Autokauppa.view
             
         }
 
+        /// <summary>
+        /// Getting next values of search result.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             dataGrid.DataSource = registerHandler.UserSeachNext(haku);
         }
 
+        /// <summary>
+        /// Getting previous values of search result.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
             dataGrid.DataSource = registerHandler.UserSeachNext(haku, true);
+        }
+
+        /// <summary>
+        /// Contains actions for user deleting selected car from database.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPoista_Click(object sender, EventArgs e)
+        {
+            registerHandler.DeleteCarFromDB(int.Parse(tbId.Text));
+            dataGrid.DataSource = registerHandler.UserSearch(haku);
+            WriteCarInfo(registerHandler.GetNewestCar());
         }
     }
 }

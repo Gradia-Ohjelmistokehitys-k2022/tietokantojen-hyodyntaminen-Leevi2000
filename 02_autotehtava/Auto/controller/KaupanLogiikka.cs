@@ -85,5 +85,15 @@ namespace Autokauppa.controller
         {
             return float.TryParse(s, out float f);
         }
+
+        public bool DeleteCarFromDB(int Id)
+        { 
+            return dbModel.MDeleteCarFromDB(Id);
+        }
+
+        public Auto GetNewestCar()
+        {
+            return dbModel.MGetNewestCar();
+        }
     }
 }

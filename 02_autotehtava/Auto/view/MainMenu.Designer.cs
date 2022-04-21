@@ -352,6 +352,7 @@
             this.btnPoista.TabIndex = 33;
             this.btnPoista.Text = "Poista";
             this.btnPoista.UseVisualStyleBackColor = false;
+            this.btnPoista.Click += new System.EventHandler(this.btnPoista_Click);
             // 
             // btnTallenna
             // 

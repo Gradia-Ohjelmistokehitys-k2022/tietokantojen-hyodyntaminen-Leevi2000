@@ -79,6 +79,20 @@ namespace Autokauppa.model
         return success;
     }
 
+    public bool MDeleteCarFromDB(int Id)
+        {
+            try
+            {
+            ExecuteCommandString($"DELETE FROM [dbo].[auto] WHERE ID = {Id}");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
     public List<AutonMerkki> getAllAutoMakersFromDatabase()
     {
         List<AutonMerkki> palaute = new List<AutonMerkki>();
@@ -198,6 +212,13 @@ namespace Autokauppa.model
         return newCar;
     }
 
+        public Auto MGetNewestCar()
+        {
+            var carDataTable = GetDataTable($"SELECT TOP(1) * FROM [dbo].[auto] ORDER BY ID DESC");
+            Auto car = CreateCarFromDataRowCollection(carDataTable.Rows);
+            return car;
+        }
+
     public Auto MGetCarByID(int Id)
     {
         var carDataTable = GetDataTable($"SELECT * FROM [dbo].[auto] WHERE ID = {Id}");
@@ -247,7 +268,7 @@ namespace Autokauppa.model
             DataTable dt = new DataTable();
             int rowsSearch = 75;
             ExecuteCommandString($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
-            if (search.HakuSana != null && search.HakuKategoria != null)
+            if (search != null && search.HakuSana != null && search.HakuKategoria != null)
             {
                 if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
                 {
