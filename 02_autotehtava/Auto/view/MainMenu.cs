@@ -254,12 +254,14 @@ namespace Autokauppa.view
 
         private void BtnHae_Click(object sender, EventArgs e)
         {
-            
-            
             if (tbSearch != null && tbSearch.Text != "")
             {
-                haku = new model.Haku(CBKategoria.SelectedValue.ToString(), tbSearch.Text);
-                dataGrid.DataSource = registerHandler.UserSearch(haku);
+                var text = tbSearch.Text.Replace(".", ",");
+                if(registerHandler.ToFloatChecker(text))
+                {
+                    haku = new model.Haku(CBKategoria.SelectedValue.ToString(), text);
+                    dataGrid.DataSource = registerHandler.UserSearch(haku);
+                }
             }
             if (cbSearch != null && cbSearch2 == null)
             {
@@ -282,6 +284,7 @@ namespace Autokauppa.view
             }
         }
 
+     
         private void CBKategoria_SelectedIndexChanged(object sender, EventArgs e)
         {
             flowLayoutPanel1.Controls.Clear();

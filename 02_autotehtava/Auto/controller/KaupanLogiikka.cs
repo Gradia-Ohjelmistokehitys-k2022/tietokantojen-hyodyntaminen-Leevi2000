@@ -80,5 +80,10 @@ namespace Autokauppa.controller
         {
             return dbModel.MUserSeachNext(search, previous);
         }
+
+        public bool ToFloatChecker(string s)
+        {
+            return float.TryParse(s, out float f);
+        }
     }
 }

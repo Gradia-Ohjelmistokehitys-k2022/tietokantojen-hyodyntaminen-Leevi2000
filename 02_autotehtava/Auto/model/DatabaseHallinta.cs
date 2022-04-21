@@ -17,6 +17,7 @@ namespace Autokauppa.model
     string yhteysTiedot;
     SqlConnection dbYhteys;
 
+
     public DatabaseHallinta()
     {
         dbYhteys = new SqlConnection();
@@ -244,17 +245,17 @@ namespace Autokauppa.model
         public DataTable MUserSearch(Haku search)
         {
             DataTable dt = new DataTable();
-
+            int rowsSearch = 75;
             ExecuteCommandString($"IF OBJECT_ID('tempdb..#SearchTemp') IS NOT NULL BEGIN DROP TABLE #SearchTemp END");
             if (search.HakuSana != null && search.HakuKategoria != null)
             {
                 if (search.HakuKategoria == "Hinta" || search.HakuKategoria == "Mittarilukema")
                 {
-                    ExecuteCommandString("WITH CTE AS ((SELECT TOP 50 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " > " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " ASC) UNION ALL (SELECT TOP 50 * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " <= " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " DESC)) SELECT TOP 25 * INTO #SearchTemp FROM CTE ORDER BY ABS(" + search.HakuKategoria + " - " + search.HakuSana + ") ASC");
+                    ExecuteCommandString($"WITH CTE AS ((SELECT TOP " + rowsSearch + " * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " > " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " ASC) UNION ALL (SELECT TOP " + rowsSearch + " * FROM [dbo].[auto] WHERE " + search.HakuKategoria + " <= " + search.HakuSana + " ORDER BY " + search.HakuKategoria + " DESC)) SELECT TOP " + rowsSearch + " * INTO #SearchTemp FROM CTE ORDER BY ABS(" + search.HakuKategoria + " - " + search.HakuSana + ") ASC");
                 }
                 else
                 {
-                    ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",", ".")} ORDER BY a.Hinta ASC");
+                    ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} LIKE {search.HakuSana.Replace(",", ".")} ORDER BY a.Hinta ASC");
                 }
 
                 // Temp db is used to reduce performance issues. 
@@ -274,7 +275,7 @@ namespace Autokauppa.model
         public DataTable MUserSeachNext(Haku search, bool previous = false)
         {
             DataTable dataTable = new DataTable();
-      
+            int rowsSearch = 75;
             DataRowCollection rs;
 
             if (previous == false)
@@ -302,19 +303,19 @@ namespace Autokauppa.model
                 {
                     if (searchValue == 0)
                     {
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} ASC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} ASC");
                     }
                     else
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} ASC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} ASC");
                 }
                 else
                 {
                     if (searchValue == 0)
                     {
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} DESC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} > {searchValue} ORDER BY {search.HakuKategoria} DESC");
                     }
                     else
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} < {searchValue} ORDER BY {search.HakuKategoria} DESC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE {search.HakuKategoria} < {searchValue} ORDER BY {search.HakuKategoria} DESC");
                 }
             }
             else
@@ -323,19 +324,19 @@ namespace Autokauppa.model
                 {
                     if (searchValue == 0)
                     {
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta ASC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta ASC");
                     }
                     else
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta ASC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta ASC");
                 }
                 else
                 {
                     if (searchValue == 0)
                     {
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta DESC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta > {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta DESC");
                     }
                     else
-                        ExecuteCommandString($"SELECT TOP 25 * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta < {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta DESC");
+                        ExecuteCommandString($"SELECT TOP {rowsSearch} * INTO #SearchTemp FROM [dbo].[auto] a WHERE Hinta < {searchValue} AND {search.HakuKategoria} = {search.HakuSana} ORDER BY Hinta DESC");
                 }
             }
 
