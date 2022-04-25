@@ -459,7 +459,8 @@ namespace Autokauppa.view
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
-            dataGrid.DataSource = registerHandler.UserSeachNext(haku);
+            if (dataGrid.DataSource != null)
+                dataGrid.DataSource = registerHandler.UserSeachNext(haku);
         }
 
         /// <summary>
@@ -469,7 +470,8 @@ namespace Autokauppa.view
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            dataGrid.DataSource = registerHandler.UserSeachNext(haku, true);
+            if (dataGrid.DataSource != null)
+                dataGrid.DataSource = registerHandler.UserSeachNext(haku, true);
         }
 
         /// <summary>
