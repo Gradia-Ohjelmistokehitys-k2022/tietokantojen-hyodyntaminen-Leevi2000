@@ -157,6 +157,7 @@
             // 
             // cbPolttoaine
             // 
+            this.cbPolttoaine.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPolttoaine.FormattingEnabled = true;
             this.cbPolttoaine.Location = new System.Drawing.Point(308, 95);
             this.cbPolttoaine.Margin = new System.Windows.Forms.Padding(2);
@@ -178,6 +179,7 @@
             // 
             // cbVari
             // 
+            this.cbVari.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbVari.FormattingEnabled = true;
             this.cbVari.Location = new System.Drawing.Point(308, 70);
             this.cbVari.Margin = new System.Windows.Forms.Padding(2);
@@ -199,6 +201,7 @@
             // 
             // cbMalli
             // 
+            this.cbMalli.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMalli.FormattingEnabled = true;
             this.cbMalli.Location = new System.Drawing.Point(308, 46);
             this.cbMalli.Margin = new System.Windows.Forms.Padding(2);
@@ -267,6 +270,7 @@
             // 
             // cbMerkki
             // 
+            this.cbMerkki.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbMerkki.FormattingEnabled = true;
             this.cbMerkki.Location = new System.Drawing.Point(308, 22);
             this.cbMerkki.Margin = new System.Windows.Forms.Padding(2);

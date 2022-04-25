@@ -240,9 +240,9 @@ namespace Autokauppa.model
         foreach (DataRow r in rc)
         {
             c.Id = int.Parse(r["ID"].ToString());
-            c.Price = float.Parse(r["Hinta"].ToString());
+            c.Price = decimal.Parse(r["Hinta"].ToString());
             c.RegistryDate = DateTime.Parse(r["Rekisteri_paivamaara"].ToString());
-            c.EngineVolume = float.Parse(r["Moottorin_tilavuus"].ToString());
+            c.EngineVolume = decimal.Parse(r["Moottorin_tilavuus"].ToString());
             c.Meter = int.Parse(r["Mittarilukema"].ToString());
             c.CarBrandId = int.Parse(r["AutonMerkkiID"].ToString());
             c.CarModelId = int.Parse(r["AutonMalliID"].ToString());
@@ -308,7 +308,7 @@ namespace Autokauppa.model
                 rs = GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + "Hinta" + " ASC").Rows; // If previous, get the lowest value.
             }
             //rs = this.GetDataTable("SELECT TOP 1 * FROM #SearchTemp ORDER BY " + search.HakuKategoria + " DESC").Rows;
-            float searchValue;
+            decimal searchValue;
             var c = CreateCarFromDataRowCollection(rs);
             if (search.HakuKategoria == "Mittarilukema")
                 searchValue = c.Meter;

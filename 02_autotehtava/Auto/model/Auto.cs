@@ -9,15 +9,15 @@ namespace Autokauppa.model
     public class Auto
     {
         private int _Id;
-        private float _Price;
+        private decimal _Price;
         private DateTime _RegistryDate;
-        private float _EngineVolume;
+        private decimal _EngineVolume;
         private int _Meter;
         private int _CarBrandId;
         private int _CarModelId;
         private int _ColorId;
         private int _FuelTypeId;
-        public Auto(int Id, float Price, DateTime RegistryDate, float EngineVolume, int Meter, int CarBrandId, int CarModelId, int ColorId, int FuelTypeId)
+        public Auto(int Id, decimal Price, DateTime RegistryDate, decimal EngineVolume, int Meter, int CarBrandId, int CarModelId, int ColorId, int FuelTypeId)
         {
             _Id = Id;
             _Price = Price;
@@ -34,9 +34,9 @@ namespace Autokauppa.model
 
         }
         public int Id { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         public DateTime RegistryDate { get; set; }
-        public float EngineVolume { get; set; }
+        public decimal EngineVolume { get; set; }
         public int Meter { get; set; }
         public int CarBrandId { get; set; }
         public int CarModelId { get; set; }

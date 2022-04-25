@@ -129,10 +129,17 @@ namespace Autokauppa.view
         private void btnTallenna_Click(object sender, EventArgs e)
         {
             var newCar = CarInfo();
-            EditMode(false);
-            registerHandler.SaveCar(newCar);
+            if (newCar != null)
+            {
+                EditMode(false);
+                registerHandler.SaveCar(newCar);
 
-            if(tbId.Text == "") WriteCarInfo(registerHandler.GetNewestCar()); // Refreshing id textbox
+                if (tbId.Text == "") WriteCarInfo(registerHandler.GetNewestCar()); // Refreshing id textbox
+            }
+            else
+            {
+                MessageBox.Show("Tekstikenttien tulisi sisältää vain desimaaleja tai kokonaislukuja", "Virhe");
+            }
         }
 
         /// <summary>
@@ -172,15 +179,18 @@ namespace Autokauppa.view
         /// <param name="car"></param>
         private void WriteCarInfo(model.Auto car)
         {
-            tbHinta.Text = car.Price.ToString();
-            tbTilavuus.Text = car.EngineVolume.ToString();
-            tbMittarilukema.Text = car.Meter.ToString();
-            dtpPaiva.Text = car.RegistryDate.ToString();
-            cbMerkki.SelectedValue = car.CarBrandId;
-            cbMalli.SelectedValue = car.CarModelId;
-            cbPolttoaine.SelectedValue = car.FuelTypeId;
-            cbVari.SelectedValue = car.ColorId;
-            if (car.Id != 0) tbId.Text = car.Id.ToString();
+            if (car != null)
+            {
+                tbHinta.Text = car.Price.ToString();
+                tbTilavuus.Text = car.EngineVolume.ToString();
+                tbMittarilukema.Text = car.Meter.ToString();
+                dtpPaiva.Text = car.RegistryDate.ToString();
+                cbMerkki.SelectedValue = car.CarBrandId;
+                cbMalli.SelectedValue = car.CarModelId;
+                cbPolttoaine.SelectedValue = car.FuelTypeId;
+                cbVari.SelectedValue = car.ColorId;
+                if (car.Id != 0) tbId.Text = car.Id.ToString();
+            }
         }
 
         /// <summary>
@@ -189,16 +199,27 @@ namespace Autokauppa.view
         /// <returns></returns>
         private model.Auto CarInfo()
         {
+            bool success = true;
+
             model.Auto car = new model.Auto();
-            if (tbHinta.Text != "") car.Price = float.Parse(tbHinta.Text);
-            if (tbTilavuus.Text != "") car.EngineVolume = float.Parse(tbTilavuus.Text);
-            if (tbMittarilukema.Text != "") car.Meter = int.Parse(tbMittarilukema.Text);
+            if (registerHandler.ToFloatChecker(tbHinta.Text) && tbHinta.Text != "") car.Price = decimal.Parse(tbHinta.Text); // User input should only contain integers or decimal
+            else
+                success = false;
+            if (registerHandler.ToFloatChecker(tbTilavuus.Text) && tbTilavuus.Text != "") car.EngineVolume = decimal.Parse(tbTilavuus.Text); // User input should only contain integers or decimal
+            else
+                success = false;
+            if (registerHandler.ToFloatChecker(tbMittarilukema.Text) && tbMittarilukema.Text != "") car.Meter = int.Parse(tbMittarilukema.Text); // User input should only contain integers or decimal
+            else
+                success = false;
             car.RegistryDate = DateTime.Parse(dtpPaiva.Text);
             if (cbMerkki.SelectedValue != null) car.CarBrandId = int.Parse(cbMerkki.SelectedValue.ToString());
             if (cbMalli.SelectedValue != null) car.CarModelId = int.Parse(cbMalli.SelectedValue.ToString());
             if (cbPolttoaine.SelectedValue != null) car.FuelTypeId = int.Parse(cbPolttoaine.SelectedValue.ToString());
             if (cbVari.SelectedValue != null) car.ColorId = int.Parse(cbVari.SelectedValue.ToString());
-            return car;
+
+            if (success)
+                return car;
+            else return null;
         }
 
         /// <summary>
@@ -357,12 +378,8 @@ namespace Autokauppa.view
                 cbSearch.DisplayMember = "Name";
                 cbSearch.DataSource = registerHandler.GetFuelType();
                 cbSearch.Width = 92;
-            }
-
-            
+            } 
         }
-
-
         private void cbSearchIndexChange(object sender, EventArgs e)
         {
             if (cbSearch != null)
