@@ -1,9 +1,3 @@
-// Decompiled with JetBrains decompiler
-// Type: Autokauppa.model.DatabaseHallinta
-// Assembly: Auto, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: D120DA37-CCDE-44DC-8140-96B5A02A59A3
-// Assembly location: C:\Users\leevi\OneDrive\Työpöytä\dsadasdsadasdasd\Auto.exe
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -49,7 +43,7 @@ namespace Autokauppa.model
 
     public bool SaveCarIntoDB(Auto c)
     {
-        //  c.RegistryDate is in wrong format so this fixes it.
+        //  c.RegistryDate might be in wrong format so this fixes it.
         string date = c.RegistryDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         string cmd;
 
@@ -291,6 +285,7 @@ namespace Autokauppa.model
             return dt;
         }
 
+        
         public DataTable MUserSeachNext(Haku search, bool previous = false)
         {
             DataTable dataTable = new DataTable();
