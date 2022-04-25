@@ -15,24 +15,39 @@ namespace Autokauppa.view
 {
     public partial class MainMenu : Form
     {
-        
+        /// <summary>
+        /// Shows information about lastly shown car that can be re-shown to user in certain conditions.
+        /// </summary>
         model.Auto tempCar = new model.Auto();
 
         readonly KaupanLogiikka registerHandler;
 
+        /// <summary>
+        /// Used in if clauses to verify if the edit mode is enabled or not.
+        /// </summary>
         private bool editing = false;
+
+        // ----------------------
+        // Search related things that must be accessible to many methods.
         TextBox tbSearch;
         TextBox tbSearch2;
         DateTimePicker dtSearch;
         ComboBox cbSearch;
         ComboBox cbSearch2;
 
+        /// <summary>
+        /// Contains the search parameters that can be sent to model.
+        /// </summary>
         model.Haku haku;
+        // ----------------------
 
         public MainMenu()
         {
             registerHandler = new KaupanLogiikka();
             InitializeComponent();
+
+            // -------------------
+            // Assigning items to comboboxes.
             cbMerkki.ValueMember = "Id";
             cbMerkki.DisplayMember = "Merkki";
             cbMerkki.DataSource = registerHandler.getAllAutoMakers();
@@ -48,11 +63,15 @@ namespace Autokauppa.view
             CBKategoria.ValueMember = "Id";
             CBKategoria.DisplayMember = "Name";
             CBKategoria.DataSource = registerHandler.GetCarDBColumns();
+            // ----------------------
 
             registerHandler.TestDatabaseConnection();
 
+            // ----------------------
+            // Starting with a car on screen
             tempCar = registerHandler.GetNextCar(tempCar.Id);
             WriteCarInfo(tempCar);
+            // ----------------------
         }
 
  
@@ -63,7 +82,7 @@ namespace Autokauppa.view
         /// <param name="e"></param>
         private void btnLisaa_Click(object sender, EventArgs e)
         {
-            EditMode();
+            EditMode(); 
             ClearText();
         }
 
@@ -83,7 +102,7 @@ namespace Autokauppa.view
         }
 
         /// <summary>
-        /// Change model combobox items after after choosin different brand.
+        /// Change (malli)combobox items after choosing a different brand.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -102,7 +121,9 @@ namespace Autokauppa.view
 
         }
 
-
+        /// <summary>
+        /// Clears car's properties on display.
+        /// </summary>
         private void ClearText()
         {
             cbMalli.Text = null;
@@ -137,11 +158,11 @@ namespace Autokauppa.view
                 EditMode(false);
                 registerHandler.SaveCar(newCar);
 
-                if (tbId.Text == "") WriteCarInfo(registerHandler.GetNewestCar()); // Refreshing id textbox
+                if (tbId.Text == "") WriteCarInfo(registerHandler.GetNewestCar()); // Refreshing the id textbox
             }
             else
             {
-                MessageBox.Show("Tekstikenttien tulisi sisältää vain desimaaleja tai kokonaislukuja", "Virhe");
+                MessageBox.Show("Tekstikenttien tulisi sisältää vain desimaaleja tai kokonaislukuja", "Virhe"); // If user has entered wrong, unallowed values, deny the save action.
             }
         }
 
@@ -161,6 +182,8 @@ namespace Autokauppa.view
                 btnLisaa.Enabled = false;
                 btnPoista.Enabled = false;
                 dtpPaiva.Enabled = true;
+
+                // Saving lastly shown car's properties to temporary object that can be re-shown if the user doesn't save new changes.
                 tempCar = CarInfo();
             }
             else
@@ -177,7 +200,7 @@ namespace Autokauppa.view
         }
 
         /// <summary>
-        /// Writes the car info from object to the screen/form text boxes.
+        /// Writes the car info from Auto object to the screen/form text boxes.
         /// </summary>
         /// <param name="car"></param>
         private void WriteCarInfo(model.Auto car)
@@ -197,7 +220,7 @@ namespace Autokauppa.view
         }
 
         /// <summary>
-        /// Gets values from text boxes and returns a Car (Auto) object.
+        /// Gets values from text boxes and returns a Car (Auto) object if text box values are valid.
         /// </summary>
         /// <returns></returns>
         private model.Auto CarInfo()
@@ -211,7 +234,7 @@ namespace Autokauppa.view
             if (registerHandler.ToFloatChecker(tbTilavuus.Text) && tbTilavuus.Text != "") car.EngineVolume = decimal.Parse(tbTilavuus.Text); // User input should only contain integers or decimal
             else
                 success = false;
-            if (registerHandler.ToFloatChecker(tbMittarilukema.Text) && tbMittarilukema.Text != "") car.Meter = int.Parse(tbMittarilukema.Text); // User input should only contain integers or decimal
+            if (registerHandler.ToFloatChecker(tbMittarilukema.Text) && tbMittarilukema.Text != "") car.Meter = int.Parse(tbMittarilukema.Text); //User input should only contain integers
             else
                 success = false;
             car.RegistryDate = DateTime.Parse(dtpPaiva.Text);
@@ -221,13 +244,13 @@ namespace Autokauppa.view
             if (cbVari.SelectedValue != null) car.ColorId = int.Parse(cbVari.SelectedValue.ToString());
             if (tbId.Text != null) car.Id = int.Parse(tbId.Text);
 
-            if (success)
+            if (success) // If there's something wrong in user input, return car object as null.
                 return car;
             else return null;
         }
 
         /// <summary>
-        /// After making changes and canceling them.
+        /// Cancels the changes and disables the edit mode.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -272,6 +295,11 @@ namespace Autokauppa.view
             }
         }
 
+        /// <summary>
+        /// If user selects a item in combobox, enable EditMode.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ModifyComboBox(object sender, EventArgs e)
         {
             if (!editing)
@@ -280,12 +308,17 @@ namespace Autokauppa.view
             }
         }
 
+        /// <summary>
+        /// Searches the database for a result specified by the given search parameters.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnHae_Click(object sender, EventArgs e)
         {
             if (tbSearch != null && tbSearch.Text != "")
             {
-                var text = tbSearch.Text.Replace(".", ",");
-                if(registerHandler.ToFloatChecker(text))
+                var text = tbSearch.Text.Replace(".", ","); // Replaces "." as a "," so user can input both of the symbols.
+                if(registerHandler.ToFloatChecker(text)) // Text search parameter should contain only decimals or floats.
                 {
                     haku = new model.Haku(CBKategoria.SelectedValue.ToString(), text);
                     dataGrid.DataSource = registerHandler.UserSearch(haku);
@@ -313,8 +346,7 @@ namespace Autokauppa.view
         }
 
      /// <summary>
-     /// Handles the search items
-     /// .
+     /// Handles the search items such as comboboxes and textboxes where user gives the search parameters.
      /// </summary>
      /// <param name="sender"></param>
      /// <param name="e"></param>
@@ -398,13 +430,12 @@ namespace Autokauppa.view
         }
 
         /// <summary>
-        /// Display car properties from datagridview to main view. 
+        /// Display car properties from datagridview to main view when item is clicked. 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void dataGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-           // dataGrid.CurrentCell.RowIndex.ToString();
            try
             {
                 DataGridViewRow r = dataGrid.Rows[e.RowIndex];
