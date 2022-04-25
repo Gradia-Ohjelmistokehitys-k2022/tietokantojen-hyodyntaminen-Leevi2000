@@ -50,6 +50,9 @@ namespace Autokauppa.view
             CBKategoria.DataSource = registerHandler.GetCarDBColumns();
 
             registerHandler.TestDatabaseConnection();
+
+            tempCar = registerHandler.GetNextCar(tempCar.Id);
+            WriteCarInfo(tempCar);
         }
 
  
@@ -216,6 +219,7 @@ namespace Autokauppa.view
             if (cbMalli.SelectedValue != null) car.CarModelId = int.Parse(cbMalli.SelectedValue.ToString());
             if (cbPolttoaine.SelectedValue != null) car.FuelTypeId = int.Parse(cbPolttoaine.SelectedValue.ToString());
             if (cbVari.SelectedValue != null) car.ColorId = int.Parse(cbVari.SelectedValue.ToString());
+            if (tbId.Text != null) car.Id = int.Parse(tbId.Text);
 
             if (success)
                 return car;

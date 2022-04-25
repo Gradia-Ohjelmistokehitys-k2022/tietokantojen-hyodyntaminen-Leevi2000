@@ -63,11 +63,9 @@ namespace Autokauppa.model
         }
         else
         {
-            cmd = ($"INSERT INTO [dbo].[auto]" +
-            $" ([Hinta], [Rekisteri_paivamaara], [Moottorin_tilavuus], [Mittarilukema]," +
-            $" [AutonMerkkiID], [AutonMalliID], [VaritID], [PolttoaineID])" +
-            $" VALUES (@Price, '{date}', @EngineVolume, {c.Meter}, {c.CarBrandId}," +
-            $" {c.CarModelId}, {c.ColorId}, {c.FuelTypeId})" +
+            cmd = ($"UPDATE [dbo].[auto]" +
+            $" SET [Hinta] = @Price, [Rekisteri_paivamaara] = '{date}', [Moottorin_tilavuus] = @EngineVolume, [Mittarilukema] = {c.Meter}," +
+            $" [AutonMerkkiID] = {c.CarBrandId}, [AutonMalliID] = {c.CarModelId}, [VaritID] = {c.ColorId}, [PolttoaineID] = {c.FuelTypeId}" +
             $" WHERE ID = {c.Id}");
         }
 
