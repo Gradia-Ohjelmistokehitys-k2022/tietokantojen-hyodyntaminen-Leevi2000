@@ -242,7 +242,7 @@ namespace Autokauppa.view
             if (cbMalli.SelectedValue != null) car.CarModelId = int.Parse(cbMalli.SelectedValue.ToString());
             if (cbPolttoaine.SelectedValue != null) car.FuelTypeId = int.Parse(cbPolttoaine.SelectedValue.ToString());
             if (cbVari.SelectedValue != null) car.ColorId = int.Parse(cbVari.SelectedValue.ToString());
-            if (tbId.Text != null) car.Id = int.Parse(tbId.Text);
+            car.Id = !string.IsNullOrEmpty(tbId.Text) ? int.Parse(tbId.Text) : 0;
 
             if (success) // If there's something wrong in user input, return car object as null.
                 return car;
