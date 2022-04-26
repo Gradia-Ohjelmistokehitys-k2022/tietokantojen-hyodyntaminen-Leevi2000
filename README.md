@@ -1,3 +1,6 @@
+# Nimi
+Leevi Eskola
+
 # Tietokantojen hyodyntaminen
 [Tietokantayhteyden luoti C#:ssa](https://www.codeproject.com/Articles/4416/Beginners-guide-to-accessing-SQL-Server-through-C) 
 
